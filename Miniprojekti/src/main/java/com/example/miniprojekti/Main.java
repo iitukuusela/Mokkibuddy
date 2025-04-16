@@ -103,7 +103,7 @@ public class Main extends Application {
 
     private void addMokkiToDatabase(Mokki mokki) {
         try {
-            Connection connection = DriverManager.getConnection("");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkitietokanta", "root", "70100aamu");
             String sql = "INSERT INTO mokki (henkilo_maara, etaisyys, sauna, poreamme, hinta_per_yo) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, mokki.getHenkiloMaara());
