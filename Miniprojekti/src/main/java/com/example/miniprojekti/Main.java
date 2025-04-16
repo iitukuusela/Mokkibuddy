@@ -82,16 +82,16 @@ public class Main extends Application {
 
     private void addSampleMokki() {
         String [][] sampleData = {
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
-                {"4", "10 km", "Kyllä", "Ei", "100.00"},
+                {"6", "2 km", "Kyllä", "Ei", "210.00"},
+                {"15", "2.8 km", "Kyllä", "Kyllä", "275.00"},
+                {"20", "4 km", "Kyllä", "Kyllä", "290.00"},
+                {"4", "2.2 km", "Kyllä", "Ei", "185.00"},
+                {"13", "3.5 km", "Kyllä", "Kyllä", "270.00"},
+                {"10", "3 km", "Kyllä", "Ei", "255.00"},
+                {"8", "4.9 km", "Ei", "Ei", "200.00"},
+                {"25", "6 km", "Kyllä", "Kyllä", "310.00"},
+                {"5", "5 km", "Ei", "Ei", "150.00"},
+                {"11", "5.5 km", "Kyllä", "Kyllä", "259.00"},
         };
 
         for (String[] mokkiData : sampleData) {
