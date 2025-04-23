@@ -4,13 +4,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Mokki {
+    private int id;
     private final StringProperty henkiloMaara;
     private final StringProperty etaisyys;
     private final StringProperty sauna;
     private final StringProperty poreamme;
     private final StringProperty hintaPerYo;
 
-    public Mokki(String vuokraushinta, String henkiloMaara, String sijainti, String text, String priceFieldText) {
+    public Mokki(String henkiloMaara, String sijainti, String sauna, String poreamme, String hintaPerYo) {
         this.henkiloMaara = new SimpleStringProperty(henkiloMaara);
         this.etaisyys = new SimpleStringProperty(sijainti);
         this.sauna = new SimpleStringProperty(sauna);
@@ -18,9 +19,24 @@ public class Mokki {
         this.hintaPerYo = new SimpleStringProperty(hintaPerYo);
     }
 
+    public Mokki(int id, String henkiloMaara, String sijainti, String sauna, String poreamme, String hintaPerYo) {
+        this.id = id;
+        this.henkiloMaara = new SimpleStringProperty(henkiloMaara);
+        this.etaisyys = new SimpleStringProperty(sijainti);
+        this.sauna = new SimpleStringProperty(sauna);
+        this.poreamme = new SimpleStringProperty(poreamme);
+        this.hintaPerYo = new SimpleStringProperty(hintaPerYo);
+    }
+
+    public int getId() { return id; }
+
+    public void setId() { this.id = id; }
+
     public String getHenkiloMaara() {
         return henkiloMaara.get();
     }
+
+    public void setHenkiloMaara(String henkiloMaara) { this.henkiloMaara.set(henkiloMaara); }
 
     public StringProperty henkiloMaaraProperty() {
         return henkiloMaara;
@@ -30,6 +46,8 @@ public class Mokki {
         return etaisyys.get();
     }
 
+    public void setEtaisyys(String etaisyys) { this.etaisyys.set(etaisyys); }
+
     public StringProperty etaisyysProperty() {
         return etaisyys;
     }
@@ -37,6 +55,8 @@ public class Mokki {
     public String getSauna() {
         return sauna.get();
     }
+
+    public void setSauna(String sauna) { this.sauna.set(sauna); }
 
     public StringProperty saunaProperty() {
         return sauna;
@@ -46,6 +66,8 @@ public class Mokki {
         return poreamme.get();
     }
 
+    public void setPoreamme(String poreamme) { this.poreamme.set(poreamme); }
+
     public StringProperty poreammeProperty() {
         return poreamme;
     }
@@ -53,6 +75,8 @@ public class Mokki {
     public String getHintaPerYo() {
         return hintaPerYo.get();
     }
+
+    public void setHintaPerYo(String hintaPerYo) { this.hintaPerYo.set(hintaPerYo); }
 
     public StringProperty hintaPerYoProperty() {
         return hintaPerYo;
