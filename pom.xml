@@ -45,7 +45,29 @@
             <version>8.0.26</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.calendarfx/view -->
+        <dependency>
+            <groupId>com.calendarfx</groupId>
+            <artifactId>view</artifactId>
+            <version>11.12.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/view-11.12.7.jar</systemPath>
+
+        </dependency>
+
+
+
+
+
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>dlsc</id>
+            <url>https://dlsc.com/maven/releases</url>
+        </repository>
+    </repositories>
+
 
     <build>
         <plugins>
