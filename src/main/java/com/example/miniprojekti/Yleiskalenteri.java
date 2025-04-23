@@ -23,7 +23,49 @@ public class Yleiskalenteri extends Application {
 
         CalendarView calendarView = new CalendarView(); //luo alenterin näkymän
 
-        //Calendar
+        Calendar yleinen = new Calendar("yleinen");
+        Calendar helmi = new Calendar("Villa Helmi");
+
+        yleinen.setStyle(Style.STYLE1);
+        helmi.setStyle(Style.STYLE2);
+
+        CalendarSource myCalendarSource = new CalendarSource("Kalenterit");
+        myCalendarSource.getCalendars().addAll(yleinen, helmi);
+
+        calendarView.getCalendarSources().addAll(myCalendarSource);
+
+        calendarView.setRequestedTime(LocalTime.now());
+
+        //säie, jolla päivitetään kalenteria
+        Thread updateTimeThread = new Thread("Kalenteri: päivitä kalenteri -thread") {
+
+            @Override
+            public void run() {
+                while (true) {
+                    Platform.runLater(() -> {
+                        calendarView.setToday(LocalDate.now());
+                        calendarView.setTime(LocalTime.now());
+                    });
+
+                    try {
+                        // update every 10 seconds
+                        sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+        };
+
+
+        updateTimeThread.setPriority(Thread.MIN_PRIORITY);
+        updateTimeThread.setDaemon(true);
+        updateTimeThread.start();
+
+
+
 
     }
 }
