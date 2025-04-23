@@ -1,10 +1,12 @@
 package com.example.miniprojekti;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Mokki {
-    private int id;
+    private final IntegerProperty id;
     private final StringProperty henkiloMaara;
     private final StringProperty etaisyys;
     private final StringProperty sauna;
@@ -12,6 +14,7 @@ public class Mokki {
     private final StringProperty hintaPerYo;
 
     public Mokki(String henkiloMaara, String sijainti, String sauna, String poreamme, String hintaPerYo) {
+        this.id = new SimpleIntegerProperty(0);
         this.henkiloMaara = new SimpleStringProperty(henkiloMaara);
         this.etaisyys = new SimpleStringProperty(sijainti);
         this.sauna = new SimpleStringProperty(sauna);
@@ -20,7 +23,7 @@ public class Mokki {
     }
 
     public Mokki(int id, String henkiloMaara, String sijainti, String sauna, String poreamme, String hintaPerYo) {
-        this.id = id;
+        this.id = new SimpleIntegerProperty(id);
         this.henkiloMaara = new SimpleStringProperty(henkiloMaara);
         this.etaisyys = new SimpleStringProperty(sijainti);
         this.sauna = new SimpleStringProperty(sauna);
@@ -28,9 +31,11 @@ public class Mokki {
         this.hintaPerYo = new SimpleStringProperty(hintaPerYo);
     }
 
-    public int getId() { return id; }
+    public int getId() { return id.get(); }
 
-    public void setId() { this.id = id; }
+    public void setId(int id) { this.id.set(id); }
+
+    public IntegerProperty idProperty() { return id; }
 
     public String getHenkiloMaara() {
         return henkiloMaara.get();
