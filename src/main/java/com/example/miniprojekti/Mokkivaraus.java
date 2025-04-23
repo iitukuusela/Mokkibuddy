@@ -18,7 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Main extends Application {
+public class Mokkivaraus extends Application {
 
     private TableView<Mokki> table;
     private ObservableList<Mokki> data;
@@ -37,7 +37,7 @@ public class Main extends Application {
         TableColumn<Mokki, String> capacityColumn = new TableColumn<>("Henkilömäärä");
         capacityColumn.setCellValueFactory(cellData -> cellData.getValue().henkiloMaaraProperty());
 
-        TableColumn<Mokki, String> distanceColumn = new TableColumn<>("Etäisyys");
+        TableColumn<Mokki, String> distanceColumn = new TableColumn<>("Etäisyys (km)");
         distanceColumn.setCellValueFactory(cellData -> cellData.getValue().etaisyysProperty());
 
         TableColumn<Mokki, String> saunaColumn = new TableColumn<>("Sauna");
