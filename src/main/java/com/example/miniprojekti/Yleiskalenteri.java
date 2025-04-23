@@ -64,7 +64,13 @@ public class Yleiskalenteri extends Application {
         updateTimeThread.setDaemon(true);
         updateTimeThread.start();
 
-
+        Scene scene = new Scene(calendarView);
+        primaryStage.setTitle("Varauskalenterit");
+        primaryStage.setScene(scene);
+        primaryStage.setWidth(1300);
+        primaryStage.setHeight(1000);
+        primaryStage.centerOnScreen();
+        primaryStage.show();
 
 
     }
