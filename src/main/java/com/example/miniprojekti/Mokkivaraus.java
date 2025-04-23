@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -17,7 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Main extends Application {
+public class Mokkivaraus extends Application {
 
     private TableView<Mokki> table;
     private ObservableList<Mokki> data;
@@ -30,10 +31,13 @@ public class Main extends Application {
         data = FXCollections.observableArrayList();
         table.setItems(data);
 
+        //TableColumn<Mokki, Number> idColumn = new TableColumn<>("ID");
+        //idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
+
         TableColumn<Mokki, String> capacityColumn = new TableColumn<>("Henkilömäärä");
         capacityColumn.setCellValueFactory(cellData -> cellData.getValue().henkiloMaaraProperty());
 
-        TableColumn<Mokki, String> distanceColumn = new TableColumn<>("Etäisyys");
+        TableColumn<Mokki, String> distanceColumn = new TableColumn<>("Etäisyys (km)");
         distanceColumn.setCellValueFactory(cellData -> cellData.getValue().etaisyysProperty());
 
         TableColumn<Mokki, String> saunaColumn = new TableColumn<>("Sauna");
@@ -45,6 +49,7 @@ public class Main extends Application {
         TableColumn<Mokki, String> priceColumn = new TableColumn<>("Hinta per yö");
         priceColumn.setCellValueFactory(cellData -> cellData.getValue().hintaPerYoProperty());
 
+        //table.getColumns().addAll(idColumn, capacityColumn, distanceColumn, saunaColumn, hotTubColumn, priceColumn);
         table.getColumns().addAll(capacityColumn, distanceColumn, saunaColumn, hotTubColumn, priceColumn);
 
         //Lomake mökin lisäämiseen
@@ -52,7 +57,7 @@ public class Main extends Application {
         capacityField.setPromptText("Henkilömäärä");
 
         TextField distanceField = new TextField();
-        distanceField.setPromptText("Etäisyys");
+        distanceField.setPromptText("Etäisyys km");
 
         TextField saunaField = new TextField();
         saunaField.setPromptText("Sauna");
@@ -63,29 +68,24 @@ public class Main extends Application {
         TextField priceField = new TextField();
         priceField.setPromptText("Hinta per yö");
 
+        //Buttonien lisäys
         Button addButton = new Button("Lisää mökki");
         addButton.setOnAction(e -> {
-            Mokki mokki = new Mokki(
-                    capacityField.getText(),
-                    distanceField.getText(),
-                    saunaField.getText(),
-                    hotTubField.getText(),
-                    priceField.getText()
-            );
-            data.add(mokki);
+            Mokki mokki = new Mokki(0, capacityField.getText(), distanceField.getText(), saunaField.getText(), hotTubField.getText(), priceField.getText());
             addMokkiToDatabase(mokki);
+            loadMokitFromDatabase();
         });
 
         Button deleteButton = new Button("Poista mökki");
         deleteButton.setOnAction(e -> {
             Mokki selectedMokki = table.getSelectionModel().getSelectedItem();
             if (selectedMokki != null) {
+                deleteMokkiFromDatabase(selectedMokki.getId());
                 data.remove(selectedMokki);
-                deteleMokkiFromDatabase(selectedMokki);
             }
         });
 
-        Button editButton = new Button("Muokkaa mokkiä");
+        Button editButton = new Button("Muokkaa mökkiä");
         editButton.setOnAction(e -> {
             Mokki selectedMokki = table.getSelectionModel().getSelectedItem();
             if (selectedMokki != null) {
@@ -94,12 +94,14 @@ public class Main extends Application {
                 selectedMokki.setSauna(saunaField.getText());
                 selectedMokki.setPoreamme(hotTubField.getText());
                 selectedMokki.setHintaPerYo(priceField.getText());
-                table.refresh();
                 updateMokkiInDatabase(selectedMokki);
+                table.refresh();
             }
         });
 
-        VBox vBox = new VBox(capacityField, distanceField, saunaField, hotTubField, priceField, addButton,deleteButton, editButton, table);
+        HBox hbox = new HBox(addButton, deleteButton, editButton);
+
+        VBox vBox = new VBox(capacityField, distanceField, saunaField, hotTubField, priceField, hbox, table);
         Scene scene = new Scene(vBox, 1000, 800);
 
         primaryStage.setTitle("Mökkien hallinta");
@@ -120,40 +122,18 @@ public class Main extends Application {
 
             data.clear();
             while (resultSet.next()) {
+                int id = resultSet.getInt("id");
                 String henkiloMaara = resultSet.getString("henkilo_maara");
                 String etaisyys = resultSet.getString("etaisyys");
                 String sauna = resultSet.getString("sauna");
                 String poreamme = resultSet.getString("poreamme");
                 String hintaPerYo = resultSet.getString("hinta_per_yo");
 
-                Mokki mokki = new Mokki(henkiloMaara, etaisyys, sauna, poreamme, hintaPerYo);
+                Mokki mokki = new Mokki(id, henkiloMaara, etaisyys, sauna, poreamme, hintaPerYo);
                 data.add(mokki);
             }
         } catch (SQLException e) {                                                                                                     
             e.printStackTrace();
-        }
-    }
-
-    private void addSampleMokki() {
-        if (data.isEmpty()) {
-            String[][] sampleData = {
-                    {"6", "2 km", "Kyllä", "Ei", "210.00"},
-                    {"15", "2.8 km", "Kyllä", "Kyllä", "275.00"},
-                    {"20", "4 km", "Kyllä", "Kyllä", "290.00"},
-                    {"4", "2.2 km", "Kyllä", "Ei", "185.00"},
-                    {"13", "3.5 km", "Kyllä", "Kyllä", "270.00"},
-                    {"10", "3 km", "Kyllä", "Ei", "255.00"},
-                    {"8", "4.9 km", "Ei", "Ei", "200.00"},
-                    {"25", "6 km", "Kyllä", "Kyllä", "310.00"},
-                    {"5", "5 km", "Ei", "Ei", "150.00"},
-                    {"11", "5.5 km", "Kyllä", "Kyllä", "259.00"},
-            };
-
-            for (String[] mokkiData : sampleData) {
-                Mokki mokki = new Mokki(mokkiData[0], mokkiData[1], mokkiData[2], mokkiData[3], mokkiData[4]);
-                data.add(mokki);
-                addMokkiToDatabase(mokki);
-            }
         }
     }
 
@@ -171,24 +151,18 @@ public class Main extends Application {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Tallennetaan mökki tietokantaan: " + mokki.getHenkiloMaara());
     }
 
-    private void deteleMokkiFromDatabase(Mokki mokki) {
+    private void deleteMokkiFromDatabase(int id) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://3306/mokkidb", "root", "70100aamu");
-            String sql = "delete from mokki where henkilo_maara = ? and etaisyys = ? and sauna = ? and poreamme = ? and hinta_per_yo = ?";
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
+            String sql = "delete from mokki where id = ?";
             PreparedStatement statment = connection.prepareStatement(sql);
-            statment.setString(1, mokki.getHenkiloMaara());
-            statment.setString(2, mokki.getEtaisyys());
-            statment.setString(3, mokki.getSauna());
-            statment.setString(4, mokki.getPoreamme());
-            statment.setString(5, mokki.getHintaPerYo());
+            statment.setInt(1, id);
             statment.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Poistetaan mökki tietokannasta: " + mokki.getHenkiloMaara());
     }
 
     private void updateMokkiInDatabase(Mokki mokki) {
@@ -201,11 +175,40 @@ public class Main extends Application {
             statment.setString(3, mokki.getSauna());
             statment.setString(4, mokki.getPoreamme());
             statment.setString(5, mokki.getHintaPerYo());
+            statment.setInt(6, mokki.getId());
             statment.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Päivitetään mökki tietokannassa: " + mokki.getHenkiloMaara());
+    }
+
+    private void addSampleMokki() {
+        if (data.isEmpty()) {
+            String[][] sampleData = {
+                    {"6", "2", "Kyllä", "Ei", "210.00"},
+                    {"15", "2.8", "Kyllä", "Kyllä", "275.00"},
+                    {"20", "4", "Kyllä", "Kyllä", "290.00"},
+                    {"4", "2.2", "Kyllä", "Ei", "185.00"},
+                    {"13", "3.5", "Kyllä", "Kyllä", "270.00"},
+                    {"10", "3", "Kyllä", "Ei", "255.00"},
+                    {"8", "4.9", "Ei", "Ei", "200.00"},
+                    {"25", "6", "Kyllä", "Kyllä", "310.00"},
+                    {"5", "5", "Ei", "Ei", "150.00"},
+                    {"11", "5.5", "Kyllä", "Kyllä", "259.00"},
+            };
+
+            for (String[] mokkiData : sampleData) {
+                Mokki mokki = new Mokki(
+                        mokkiData[0],
+                        mokkiData[1],
+                        mokkiData[2],
+                        mokkiData[3],
+                        mokkiData[4]
+                );
+                addMokkiToDatabase(mokki);
+            }
+            loadMokitFromDatabase();
+        }
     }
 
     public static void main(String[] args) {
