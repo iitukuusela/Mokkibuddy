@@ -7,7 +7,7 @@ module com.example.miniprojekti {
     requires org.kordamp.ikonli.fontawesome;
     requires javafx.controls;
     requires org.controlsfx.controls;
-
+    //requires org.mnode.ical4j.core; tää nimi on väärin
 
 
 
