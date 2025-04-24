@@ -11,6 +11,7 @@ module com.example.miniprojekti {
 
 
 
+
     opens com.example.miniprojekti to javafx.fxml;
     exports com.example.miniprojekti;
 }
