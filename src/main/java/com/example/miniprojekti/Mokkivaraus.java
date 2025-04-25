@@ -55,18 +55,23 @@ public class Mokkivaraus extends Application {
         //Lomake mökin lisäämiseen
         TextField capacityField = new TextField();
         capacityField.setPromptText("Henkilömäärä");
+        capacityField.setMaxWidth(200);
 
         TextField distanceField = new TextField();
         distanceField.setPromptText("Etäisyys km");
+        distanceField.setMaxWidth(200);
 
         TextField saunaField = new TextField();
         saunaField.setPromptText("Sauna");
+        saunaField.setMaxWidth(200);
 
         TextField hotTubField = new TextField();
         hotTubField.setPromptText("Poreamme");
+        hotTubField.setMaxWidth(200);
 
         TextField priceField = new TextField();
         priceField.setPromptText("Hinta per yö");
+        priceField.setMaxWidth(200);
 
         //Buttonien lisäys
         Button addButton = new Button("Lisää mökki");
@@ -99,10 +104,10 @@ public class Mokkivaraus extends Application {
             }
         });
 
-        HBox hbox = new HBox(addButton, deleteButton, editButton);
+        HBox hbox = new HBox(10, addButton, deleteButton, editButton);
 
-        VBox vBox = new VBox(capacityField, distanceField, saunaField, hotTubField, priceField, hbox, table);
-        Scene scene = new Scene(vBox, 1000, 800);
+        VBox vBox = new VBox(5, capacityField, distanceField, saunaField, hotTubField, priceField, hbox, table);
+        Scene scene = new Scene(vBox, 400, 600);
 
         primaryStage.setTitle("Mökkien hallinta");
         primaryStage.setScene(scene);
