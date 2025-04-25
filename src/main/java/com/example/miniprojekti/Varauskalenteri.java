@@ -27,10 +27,6 @@ public class Varauskalenteri extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         //Lomake varauksen lisäämiseen
-        TextField peopleField = new TextField();
-        peopleField.setPromptText("Henkilömäärä");
-        peopleField.setMaxWidth(150);
-
         TextField nameField = new TextField();
         nameField.setPromptText("Varaajan nimi");
         nameField.setMaxWidth(150);
@@ -43,8 +39,12 @@ public class Varauskalenteri extends Application {
         phoneField.setPromptText("Puhelinnumero");
         phoneField.setMaxWidth(150);
 
+        TextField peopleField = new TextField();
+        peopleField.setPromptText("Henkilömäärä");
+        peopleField.setMaxWidth(150);
+
         HBox peopleBox = new HBox(5);
-        peopleBox.getChildren().addAll(peopleField, nameField, emailField, phoneField);
+        peopleBox.getChildren().addAll(nameField, emailField, phoneField, peopleField);
 
         TextField mokkiField = new TextField();
         mokkiField.setPromptText("Varattu mökki");
@@ -96,12 +96,15 @@ public class Varauskalenteri extends Application {
 
         Button findButton = new Button("Etsi varaus");
 
+        HBox buttons = new HBox(5);
+        buttons.getChildren().addAll(addButton, deleteButton, editButton, findButton);
+
         //Loppu ja alkupäivät
         DatePicker startDatePicker = new DatePicker();
         DatePicker endDatePicker = new DatePicker();
 
-        Label startDateLabel = new Label("Start date:");
-        Label endDateLabel = new Label("End date:");
+        Label startDateLabel = new Label("Saapumispäivä:");
+        Label endDateLabel = new Label("Lähtöpäivä:");
 
         VBox startDateVBox = new VBox(5);
         startDateVBox.getChildren().addAll(startDateLabel, startDatePicker);
@@ -118,9 +121,10 @@ public class Varauskalenteri extends Application {
         //Asettelu
         VBox vbox = new VBox(10);
 
-        vbox.getChildren().addAll(infoVBoxs, datesBox);
+        vbox.getChildren().addAll(infoVBoxs, datesBox, buttons);
 
-        Scene scene = new Scene(vbox, 800, 400);
+        Scene scene = new Scene(vbox, 800, 600);
+        primaryStage.setTitle("Varauskalenteri");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
