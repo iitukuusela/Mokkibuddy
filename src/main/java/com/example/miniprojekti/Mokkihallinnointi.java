@@ -18,10 +18,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Mokkivaraus extends Application {
+public class Mokkihallinnointi extends Application {
 
-    private TableView<Mokki> table;
-    private ObservableList<Mokki> data;
+    public TableView<Mokki> table;
+    public ObservableList<Mokki> data;
 
     @Override
     public void start(Stage primaryStage) {
@@ -118,7 +118,7 @@ public class Mokkivaraus extends Application {
         addSampleMokki();
     }
 
-    private void loadMokitFromDatabase() {
+    public void loadMokitFromDatabase() {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
             String sql = "select * from mokki";
@@ -142,7 +142,7 @@ public class Mokkivaraus extends Application {
         }
     }
 
-    private void addMokkiToDatabase(Mokki mokki) {
+    public void addMokkiToDatabase(Mokki mokki) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
             String sql = "INSERT INTO mokki (henkilo_maara, etaisyys, sauna, poreamme, hinta_per_yo) VALUES (?, ?, ?, ?, ?)";
@@ -158,7 +158,7 @@ public class Mokkivaraus extends Application {
         }
     }
 
-    private void deleteMokkiFromDatabase(int id) {
+    public void deleteMokkiFromDatabase(int id) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
             String sql = "delete from mokki where id = ?";
@@ -170,7 +170,7 @@ public class Mokkivaraus extends Application {
         }
     }
 
-    private void updateMokkiInDatabase(Mokki mokki) {
+    public void updateMokkiInDatabase(Mokki mokki) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
             String sql = "update mokki set henkilo_maara = ?, etaisyys = ?, sauna = ?, poreamme = ?, hinta_per_yo = ? where id = ?";
@@ -187,7 +187,7 @@ public class Mokkivaraus extends Application {
         }
     }
 
-    private void addSampleMokki() {
+    public void addSampleMokki() {
         if (data.isEmpty()) {
             String[][] sampleData = {
                     {"6", "2", "Kyllä", "Ei", "210.00"},
@@ -215,6 +215,8 @@ public class Mokkivaraus extends Application {
             loadMokitFromDatabase();
         }
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
