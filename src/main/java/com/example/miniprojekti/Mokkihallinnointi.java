@@ -18,10 +18,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Mokkivaraus extends Application {
+public class Mokkihallinnointi extends Application {
 
-    private TableView<Mokki> table;
-    private ObservableList<Mokki> data;
+    public TableView<Mokki> table;
+    public ObservableList<Mokki> data;
 
     @Override
     public void start(Stage primaryStage) {
@@ -55,18 +55,23 @@ public class Mokkivaraus extends Application {
         //Lomake mökin lisäämiseen
         TextField capacityField = new TextField();
         capacityField.setPromptText("Henkilömäärä");
+        capacityField.setMaxWidth(200);
 
         TextField distanceField = new TextField();
         distanceField.setPromptText("Etäisyys km");
+        distanceField.setMaxWidth(200);
 
         TextField saunaField = new TextField();
         saunaField.setPromptText("Sauna");
+        saunaField.setMaxWidth(200);
 
         TextField hotTubField = new TextField();
         hotTubField.setPromptText("Poreamme");
+        hotTubField.setMaxWidth(200);
 
         TextField priceField = new TextField();
         priceField.setPromptText("Hinta per yö");
+        priceField.setMaxWidth(200);
 
         //Buttonien lisäys
         Button addButton = new Button("Lisää mökki");
@@ -99,10 +104,10 @@ public class Mokkivaraus extends Application {
             }
         });
 
-        HBox hbox = new HBox(addButton, deleteButton, editButton);
+        HBox hbox = new HBox(10, addButton, deleteButton, editButton);
 
-        VBox vBox = new VBox(capacityField, distanceField, saunaField, hotTubField, priceField, hbox, table);
-        Scene scene = new Scene(vBox, 1000, 800);
+        VBox vBox = new VBox(5, capacityField, distanceField, saunaField, hotTubField, priceField, hbox, table);
+        Scene scene = new Scene(vBox, 400, 600);
 
         primaryStage.setTitle("Mökkien hallinta");
         primaryStage.setScene(scene);
@@ -113,7 +118,7 @@ public class Mokkivaraus extends Application {
         addSampleMokki();
     }
 
-    private void loadMokitFromDatabase() {
+    public void loadMokitFromDatabase() {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
             String sql = "select * from mokki";
@@ -137,7 +142,7 @@ public class Mokkivaraus extends Application {
         }
     }
 
-    private void addMokkiToDatabase(Mokki mokki) {
+    public void addMokkiToDatabase(Mokki mokki) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
             String sql = "INSERT INTO mokki (henkilo_maara, etaisyys, sauna, poreamme, hinta_per_yo) VALUES (?, ?, ?, ?, ?)";
@@ -153,7 +158,7 @@ public class Mokkivaraus extends Application {
         }
     }
 
-    private void deleteMokkiFromDatabase(int id) {
+    public void deleteMokkiFromDatabase(int id) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
             String sql = "delete from mokki where id = ?";
@@ -165,7 +170,7 @@ public class Mokkivaraus extends Application {
         }
     }
 
-    private void updateMokkiInDatabase(Mokki mokki) {
+    public void updateMokkiInDatabase(Mokki mokki) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
             String sql = "update mokki set henkilo_maara = ?, etaisyys = ?, sauna = ?, poreamme = ?, hinta_per_yo = ? where id = ?";
@@ -182,7 +187,7 @@ public class Mokkivaraus extends Application {
         }
     }
 
-    private void addSampleMokki() {
+    public void addSampleMokki() {
         if (data.isEmpty()) {
             String[][] sampleData = {
                     {"6", "2", "Kyllä", "Ei", "210.00"},
@@ -210,6 +215,8 @@ public class Mokkivaraus extends Application {
             loadMokitFromDatabase();
         }
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
