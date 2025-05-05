@@ -1,5 +1,6 @@
 package com.example.miniprojekti;
 
+import com.calendarfx.model.Entry;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -23,14 +24,44 @@ public class Yleiskalenteri extends Application {
 
         CalendarView calendarView = new CalendarView(); //luo alenterin näkymän
 
+        //mökkien kalenterit
         Calendar yleinen = new Calendar("yleinen");
         Calendar helmi = new Calendar("Villa Helmi");
+        Calendar liisa = new Calendar<>("Villa Liisa");
+        Calendar pisara = new Calendar<>("Villa Pisara");
+        Calendar erik = new Calendar<>("Villa Erik");
+        Calendar esko = new Calendar<>("Villa Esko");
+        Calendar heino = new Calendar<>("Villa Heino");
+        Calendar jukka = new Calendar<>("Villa Jukka");
+        Calendar aurinko = new Calendar<>("Villa Aurinko");
+        Calendar pilvi = new Calendar<>("Villa Pilvi");
+        Calendar kumpu = new Calendar<>("Villa Kumpu");
 
         yleinen.setStyle(Style.STYLE1);
-        helmi.setStyle(Style.STYLE2);
+        helmi.setStyle(Style.STYLE1);
+        liisa.setStyle(Style.STYLE2);
+        pisara.setStyle(Style.STYLE3);
+        erik.setStyle(Style.STYLE4);
+        //esko.setStyle(Style.STYLE5);
+        heino.setStyle(Style.STYLE6);
+        jukka.setStyle(Style.STYLE7);
+        //aurinko.setStyle(Style.STYLE2);  //tässä loppu tyyli kesken nii luovutaan kolmesta viimesestä mökistä
+        pilvi.setStyle(Style.STYLE5);
+        //kumpu.setStyle(Style.STYLE4);
 
         CalendarSource myCalendarSource = new CalendarSource("Kalenterit");
-        myCalendarSource.getCalendars().addAll(yleinen, helmi);
+        myCalendarSource.getCalendars().addAll(helmi, liisa, pisara, erik, pilvi, heino, jukka);
+
+        //testimerkintä kalenteriin eli entry
+        Entry varaus = new Entry<>("Varaus: Nyström, 2hlö");
+        varaus.setInterval(LocalDate.of(2025, 8, 6), LocalDate.of(2025, 8, 16));
+        erik.addEntries(varaus);
+
+        Entry varaus2 = new Entry<>("Varaus: Jokinen, 5hlö");
+        pilvi.addEntries(varaus2);
+
+        Entry varaus3 = new Entry<>("Varaus: Korhonen, 15hlö");
+        liisa.addEntries(varaus3);
 
         calendarView.getCalendarSources().addAll(myCalendarSource);
 
@@ -68,7 +99,7 @@ public class Yleiskalenteri extends Application {
         primaryStage.setTitle("Varauskalenterit");
         primaryStage.setScene(scene);
         primaryStage.setWidth(1300);
-        primaryStage.setHeight(1000);
+        primaryStage.setHeight(900);
         primaryStage.centerOnScreen();
         primaryStage.show();
 
