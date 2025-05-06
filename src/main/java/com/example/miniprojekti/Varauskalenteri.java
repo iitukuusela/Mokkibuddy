@@ -5,16 +5,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import javafx.scene.text.Text;
-import javafx.scene.input.MouseEvent;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.control.ComboBox;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Varauskalenteri extends Application {
@@ -50,20 +43,37 @@ public class Varauskalenteri extends Application {
         mokkiField.setPromptText("Varattu mökki");
         mokkiField.setMaxWidth(150);
 
-        TextField lisaSankyField = new TextField();
-        lisaSankyField.setPromptText("Lisäsängyn tarve");
-        lisaSankyField.setMaxWidth(150);
+        ComboBox lisaSankyBox = new ComboBox<>();
+        lisaSankyBox.getItems().addAll("Kyllä", "Ei");
+        lisaSankyBox.setPromptText("Lisäsängyn tarve");
+        lisaSankyBox.setMaxWidth(150);
 
-        TextField cleaningField = new TextField();
-        cleaningField.setPromptText("Siivouspalvelu");
-        cleaningField.setMaxWidth(150);
+        //TextField lisaSankyField = new TextField();
+        //lisaSankyField.setPromptText("Lisäsängyn tarve");
+        //lisaSankyField.setMaxWidth(150);
 
-        TextField lateCOField = new TextField();
-        lateCOField.setPromptText("Myöhäinen uloskirjautuminen");
-        lateCOField.setMaxWidth(150);
+        //TextField cleaningField = new TextField();
+        //cleaningField.setPromptText("Siivouspalvelu");
+        //cleaningField.setMaxWidth(150);
+
+        ComboBox cleaningBox = new ComboBox<>();
+        cleaningBox.getItems().addAll("Kyllä", "Ei");
+        cleaningBox.setPromptText("Lisäsängyn tarve");
+        cleaningBox.setMaxWidth(150);
+
+        //TextField lateCOField = new TextField();
+        //lateCOField.setPromptText("Myöhäinen uloskirjautuminen");
+        //lateCOField.setMaxWidth(150);
+
+
+        ComboBox lateCOBox = new ComboBox<>();
+        lateCOBox.getItems().addAll("Kyllä", "Ei");
+        lateCOBox.setPromptText("Myöhäinen uloskirjautuminen");
+        lateCOBox.setMaxWidth(250);
+
 
         HBox mokkiBox = new HBox(5);
-        mokkiBox.getChildren().addAll(mokkiField, lisaSankyField, cleaningField, lateCOField);
+        mokkiBox.getChildren().addAll(mokkiField, lisaSankyBox, cleaningBox, lateCOBox);
 
         TextField priceField = new TextField();
         priceField.setPromptText("Summa");
