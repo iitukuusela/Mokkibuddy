@@ -4,10 +4,8 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -61,13 +59,23 @@ public class Mokkihallinnointi extends Application {
         distanceField.setPromptText("Etäisyys km");
         distanceField.setMaxWidth(200);
 
-        TextField saunaField = new TextField();
-        saunaField.setPromptText("Sauna");
-        saunaField.setMaxWidth(200);
+        ComboBox<String> saunaBox = new ComboBox<>();
+        saunaBox.getItems().addAll("Kyllä", "Ei");
+        saunaBox.setPromptText("Sauna");
+        saunaBox.setMaxWidth(200);
 
-        TextField hotTubField = new TextField();
-        hotTubField.setPromptText("Poreamme");
-        hotTubField.setMaxWidth(200);
+        //TextField saunaField = new TextField();
+        //saunaField.setPromptText("Sauna");
+        //saunaField.setMaxWidth(200);
+
+        ComboBox<String> hotTubBox = new ComboBox<>();
+        hotTubBox.getItems().addAll("Kyllä", "Ei");
+        hotTubBox.setPromptText("Poreamme");
+        hotTubBox.setMaxWidth(200);
+
+        //TextField hotTubField = new TextField();
+        //hotTubField.setPromptText("Poreamme");
+        //hotTubField.setMaxWidth(200);
 
         TextField priceField = new TextField();
         priceField.setPromptText("Hinta per yö");
@@ -76,7 +84,7 @@ public class Mokkihallinnointi extends Application {
         //Buttonien lisäys
         Button addButton = new Button("Lisää mökki");
         addButton.setOnAction(e -> {
-            Mokki mokki = new Mokki(0, capacityField.getText(), distanceField.getText(), saunaField.getText(), hotTubField.getText(), priceField.getText());
+            Mokki mokki = new Mokki(0, capacityField.getText(), distanceField.getText(), saunaBox.getValue(), hotTubBox.getValue(), priceField.getText());
             addMokkiToDatabase(mokki);
             loadMokitFromDatabase();
         });
@@ -96,8 +104,8 @@ public class Mokkihallinnointi extends Application {
             if (selectedMokki != null) {
                 selectedMokki.setHenkiloMaara(capacityField.getText());
                 selectedMokki.setEtaisyys(distanceField.getText());
-                selectedMokki.setSauna(saunaField.getText());
-                selectedMokki.setPoreamme(hotTubField.getText());
+                selectedMokki.setSauna(saunaBox.getValue());
+                selectedMokki.setPoreamme(hotTubBox.getValue());
                 selectedMokki.setHintaPerYo(priceField.getText());
                 updateMokkiInDatabase(selectedMokki);
                 table.refresh();
@@ -106,7 +114,7 @@ public class Mokkihallinnointi extends Application {
 
         HBox hbox = new HBox(10, addButton, deleteButton, editButton);
 
-        VBox vBox = new VBox(5, capacityField, distanceField, saunaField, hotTubField, priceField, hbox, table);
+        VBox vBox = new VBox(5, capacityField, distanceField, saunaBox, hotTubBox, priceField, hbox, table);
         Scene scene = new Scene(vBox, 400, 600);
 
         primaryStage.setTitle("Mökkien hallinta");

@@ -43,7 +43,7 @@ public class Varauskalenteri extends Application {
         mokkiField.setPromptText("Varattu mökki");
         mokkiField.setMaxWidth(150);
 
-        ComboBox lisaSankyBox = new ComboBox<>();
+        ComboBox<String> lisaSankyBox = new ComboBox<>();
         lisaSankyBox.getItems().addAll("Kyllä", "Ei");
         lisaSankyBox.setPromptText("Lisäsängyn tarve");
         lisaSankyBox.setMaxWidth(150);
@@ -56,9 +56,9 @@ public class Varauskalenteri extends Application {
         //cleaningField.setPromptText("Siivouspalvelu");
         //cleaningField.setMaxWidth(150);
 
-        ComboBox cleaningBox = new ComboBox<>();
+        ComboBox<String> cleaningBox = new ComboBox<>();
         cleaningBox.getItems().addAll("Kyllä", "Ei");
-        cleaningBox.setPromptText("Lisäsängyn tarve");
+        cleaningBox.setPromptText("Siivouspalvelu");
         cleaningBox.setMaxWidth(150);
 
         //TextField lateCOField = new TextField();
@@ -66,7 +66,7 @@ public class Varauskalenteri extends Application {
         //lateCOField.setMaxWidth(150);
 
 
-        ComboBox lateCOBox = new ComboBox<>();
+        ComboBox<String> lateCOBox = new ComboBox<>();
         lateCOBox.getItems().addAll("Kyllä", "Ei");
         lateCOBox.setPromptText("Myöhäinen uloskirjautuminen");
         lateCOBox.setMaxWidth(250);
