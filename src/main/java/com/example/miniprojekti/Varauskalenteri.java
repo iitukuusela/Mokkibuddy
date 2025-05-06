@@ -58,7 +58,7 @@ public class Varauskalenteri extends Application {
 
         ComboBox cleaningBox = new ComboBox<>();
         cleaningBox.getItems().addAll("Kyllä", "Ei");
-        cleaningBox.setPromptText("Lisäsängyn tarve");
+        cleaningBox.setPromptText("Lisäsängyn tarve ");
         cleaningBox.setMaxWidth(150);
 
         //TextField lateCOField = new TextField();
