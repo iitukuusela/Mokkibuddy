@@ -6,8 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import Mokkihallinnointi;
-
 
 public class Main extends Application {
 
