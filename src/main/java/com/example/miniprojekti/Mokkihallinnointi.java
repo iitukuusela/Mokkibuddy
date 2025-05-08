@@ -128,7 +128,16 @@ public class Mokkihallinnointi extends Application {
 
     public void loadMokitFromDatabase() {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
+            String password = System.getenv("MYSQL_PASSWORD");
+
+            if (password == null) {
+                throw new SQLException("MYSQL_PASSWORD is null");
+            }
+
+            String url = "jdbc:mysql://localhost:3306/mokkidb";
+            String username = "java_user";
+
+            Connection connection = DriverManager.getConnection(url, username, password);
             String sql = "select * from mokki";
             PreparedStatement statment = connection.prepareStatement(sql);
             ResultSet resultSet = statment.executeQuery();
@@ -152,7 +161,16 @@ public class Mokkihallinnointi extends Application {
 
     public void addMokkiToDatabase(Mokki mokki) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
+            String password = System.getenv("MYSQL_PASSWORD");
+
+            if (password == null) {
+                throw new SQLException("MYSQL_PASSWORD is null");
+            }
+
+            String url = "jdbc:mysql://localhost:3306/mokkidb";
+            String username = "java_user";
+
+            Connection connection = DriverManager.getConnection(url, username, password);
             String sql = "INSERT INTO mokki (henkilo_maara, etaisyys, sauna, poreamme, hinta_per_yo) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, mokki.getHenkiloMaara());
@@ -168,7 +186,16 @@ public class Mokkihallinnointi extends Application {
 
     public void deleteMokkiFromDatabase(int id) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
+            String password = System.getenv("MYSQL_PASSWORD");
+
+            if (password == null) {
+                throw new SQLException("MYSQL_PASSWORD is null");
+            }
+
+            String url = "jdbc:mysql://localhost:3306/mokkidb";
+            String username = "java_user";
+
+            Connection connection = DriverManager.getConnection(url, username, password);
             String sql = "delete from mokki where id = ?";
             PreparedStatement statment = connection.prepareStatement(sql);
             statment.setInt(1, id);
@@ -180,7 +207,16 @@ public class Mokkihallinnointi extends Application {
 
     public void updateMokkiInDatabase(Mokki mokki) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mokkidb", "root", "70100aamu");
+            String password = System.getenv("MYSQL_PASSWORD");
+
+            if (password == null) {
+                throw new SQLException("MYSQL_PASSWORD is null");
+            }
+
+            String url = "jdbc:mysql://localhost:3306/mokkidb";
+            String username = "java_user";
+
+            Connection connection = DriverManager.getConnection(url, username, password);
             String sql = "update mokki set henkilo_maara = ?, etaisyys = ?, sauna = ?, poreamme = ?, hinta_per_yo = ? where id = ?";
             PreparedStatement statment = connection.prepareStatement(sql);
             statment.setString(1, mokki.getHenkiloMaara());
