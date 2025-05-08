@@ -46,7 +46,8 @@ public class Main extends Application {
         });
 
         bttaustaohjelma.setOnAction(e -> {
-
+            Taustaohjelma taustaohjelma = new Taustaohjelma();
+            primaryStage.setScene();
         })
 
     }
