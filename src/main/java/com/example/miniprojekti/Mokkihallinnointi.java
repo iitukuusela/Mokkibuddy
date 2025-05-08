@@ -23,6 +23,12 @@ public class Mokkihallinnointi extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.setScene(createScene());
+        primaryStage.setTitle("Mokkihallinnointi");
+        primaryStage.show();
+    }
+
+    public Scene createScene() {
 
         //Taulukko mökkien näyttämiseen
         table = new TableView<>();
@@ -85,15 +91,15 @@ public class Mokkihallinnointi extends Application {
         Button addButton = new Button("Lisää mökki");
         addButton.setOnAction(e -> {
             Mokki mokki = new Mokki(0, capacityField.getText(), distanceField.getText(), saunaBox.getValue(), hotTubBox.getValue(), priceField.getText());
-            addMokkiToDatabase(mokki);
-            loadMokitFromDatabase();
+            //addMokkiToDatabase(mokki);
+            //loadMokitFromDatabase();
         });
 
         Button deleteButton = new Button("Poista mökki");
         deleteButton.setOnAction(e -> {
             Mokki selectedMokki = table.getSelectionModel().getSelectedItem();
             if (selectedMokki != null) {
-                deleteMokkiFromDatabase(selectedMokki.getId());
+                //deleteMokkiFromDatabase(selectedMokki.getId());
                 data.remove(selectedMokki);
             }
         });
@@ -107,7 +113,7 @@ public class Mokkihallinnointi extends Application {
                 selectedMokki.setSauna(saunaBox.getValue());
                 selectedMokki.setPoreamme(hotTubBox.getValue());
                 selectedMokki.setHintaPerYo(priceField.getText());
-                updateMokkiInDatabase(selectedMokki);
+                //updateMokkiInDatabase(selectedMokki);
                 table.refresh();
             }
         });
@@ -117,15 +123,12 @@ public class Mokkihallinnointi extends Application {
         VBox vBox = new VBox(5, capacityField, distanceField, saunaBox, hotTubBox, priceField, hbox, table);
         Scene scene = new Scene(vBox, 400, 600);
 
-        primaryStage.setTitle("Mökkien hallinta");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
         //Lisää esimerkkimökit
-        loadMokitFromDatabase();
-        addSampleMokki();
+        //loadMokitFromDatabase();
+        //addSampleMokki();
+        return scene;
     }
-
+/*
     public void loadMokitFromDatabase() {
         try {
             String password = System.getenv("MYSQL_PASSWORD");
@@ -264,5 +267,5 @@ public class Mokkihallinnointi extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
+    }*/
 }

@@ -18,19 +18,19 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        root = new BorderPane();
+       root = new BorderPane();
 
         HBox menu = new HBox(10);
         menu.setStyle("-fx-padding: 20; -fx-alignment: center;");
 
         //Napit
-        Button yleiskalenteri = new Button("Yleiskalenteri");
-        Button varauskalenteri = new Button("Varauskalenteri");
-        Button mokkihallinnointi = new Button("Mokkien hallinnointi");
-        Button taustaohjelma = new Button("Taustaohjelma");
+        Button btyleiskalenteri = new Button("Yleiskalenteri");
+        Button btvarauskalenteri = new Button("Varauskalenteri");
+        Button btmokkihallinnointi = new Button("Mokkien hallinnointi");
+        Button bttaustaohjelma = new Button("Taustaohjelma");
 
         //Napit valikkoon
-        menu.getChildren().addAll(yleiskalenteri, varauskalenteri, mokkihallinnointi, taustaohjelma);
+        menu.getChildren().addAll(btyleiskalenteri, btvarauskalenteri, btmokkihallinnointi, bttaustaohjelma);
 
         //Nappien sijainti
         root.setCenter(menu);
@@ -40,7 +40,14 @@ public class Main extends Application {
         primaryStage.setTitle("Varausjärjestelmä");
         primaryStage.show();
 
-        //yksikkö ja integraatiotestaus
-    }
+        btmokkihallinnointi.setOnAction(e -> {
+            Mokkihallinnointi mokkihallinnointi = new Mokkihallinnointi();
+            primaryStage.setScene(mokkihallinnointi.createScene());
+        });
 
+        bttaustaohjelma.setOnAction(e -> {
+
+        })
+
+    }
 }
