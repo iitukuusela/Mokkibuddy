@@ -19,6 +19,13 @@ public class Varauskalenteri extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        primaryStage.setScene(createScene());
+        primaryStage.setTitle("Varauskalenteri");
+        primaryStage.show();
+    }
+
+    public Scene createScene() {
+
         //Lomake varauksen lisäämiseen
         TextField nameField = new TextField();
         nameField.setPromptText("Varaajan nimi");
@@ -134,8 +141,7 @@ public class Varauskalenteri extends Application {
         vbox.getChildren().addAll(infoVBoxs, datesBox, buttons);
 
         Scene scene = new Scene(vbox, 800, 600);
-        primaryStage.setTitle("Varauskalenteri");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        return scene;
     }
+
 }

@@ -20,6 +20,13 @@ public class Taustaohjelma extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        primaryStage.setScene(createScene());
+        primaryStage.setTitle("Taustaohjelma");
+        primaryStage.show();
+    }
+
+    public Scene createScene() {
+
         //Lomake varauksen lisäämiseen
         TextField nameField = new TextField();
         nameField.setPromptText("Varaajan nimi");
@@ -72,9 +79,6 @@ public class Taustaohjelma extends Application {
         vBox.getChildren().addAll(allInfoBox, buttonbox);
 
         Scene scene = new Scene(vBox, 600, 400);
-        primaryStage.setTitle("Taustaohjelma");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        
+        return scene;
     }
 }

@@ -20,7 +20,14 @@ public class Yleiskalenteri extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
+
+        primaryStage.setScene(createScene());
+        primaryStage.setTitle("Yleiskalenteri");
+        primaryStage.show();
+    }
+
+    public Scene createScene() {
 
         CalendarView calendarView = new CalendarView(); //luo alenterin näkymän
 
@@ -96,12 +103,7 @@ public class Yleiskalenteri extends Application {
         updateTimeThread.start();
 
         Scene scene = new Scene(calendarView);
-        primaryStage.setTitle("Varauskalenterit");
-        primaryStage.setScene(scene);
-        primaryStage.setWidth(1300);
-        primaryStage.setHeight(900);
-        primaryStage.centerOnScreen();
-        primaryStage.show();
+        return scene;
 
 
     }

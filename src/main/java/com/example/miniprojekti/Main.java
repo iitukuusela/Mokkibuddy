@@ -40,6 +40,16 @@ public class Main extends Application {
         primaryStage.setTitle("Varausjärjestelmä");
         primaryStage.show();
 
+        btyleiskalenteri.setOnAction(e -> {
+            Yleiskalenteri yleiskalenteri = new Yleiskalenteri();
+            primaryStage.setScene(yleiskalenteri.createScene());
+        });
+
+        btvarauskalenteri.setOnAction(e -> {
+            Varauskalenteri varauskalenteri = new Varauskalenteri();
+            primaryStage.setScene(varauskalenteri.createScene());
+        });
+
         btmokkihallinnointi.setOnAction(e -> {
             Mokkihallinnointi mokkihallinnointi = new Mokkihallinnointi();
             primaryStage.setScene(mokkihallinnointi.createScene());
@@ -47,8 +57,8 @@ public class Main extends Application {
 
         bttaustaohjelma.setOnAction(e -> {
             Taustaohjelma taustaohjelma = new Taustaohjelma();
-            primaryStage.setScene();
-        })
+            primaryStage.setScene(taustaohjelma.createScene());
+        });
 
     }
 }
