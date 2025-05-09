@@ -18,6 +18,15 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        Scene scene = createScene(primaryStage);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Mökkivarausjärjestelmä");
+        primaryStage.show();
+
+    }
+
+    public Scene createScene(Stage primaryStage) {
+
        root = new BorderPane();
 
         HBox menu = new HBox(10);
@@ -60,5 +69,6 @@ public class Main extends Application {
             primaryStage.setScene(taustaohjelma.createScene());
         });
 
+        return scene;
     }
 }

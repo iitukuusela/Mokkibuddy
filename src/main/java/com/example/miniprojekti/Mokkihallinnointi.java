@@ -91,15 +91,15 @@ public class Mokkihallinnointi extends Application {
         Button addButton = new Button("Lisää mökki");
         addButton.setOnAction(e -> {
             Mokki mokki = new Mokki(0, capacityField.getText(), distanceField.getText(), saunaBox.getValue(), hotTubBox.getValue(), priceField.getText());
-            //addMokkiToDatabase(mokki);
-            //loadMokitFromDatabase();
+            addMokkiToDatabase(mokki);
+            loadMokitFromDatabase();
         });
 
         Button deleteButton = new Button("Poista mökki");
         deleteButton.setOnAction(e -> {
             Mokki selectedMokki = table.getSelectionModel().getSelectedItem();
             if (selectedMokki != null) {
-                //deleteMokkiFromDatabase(selectedMokki.getId());
+                deleteMokkiFromDatabase(selectedMokki.getId());
                 data.remove(selectedMokki);
             }
         });
@@ -113,10 +113,12 @@ public class Mokkihallinnointi extends Application {
                 selectedMokki.setSauna(saunaBox.getValue());
                 selectedMokki.setPoreamme(hotTubBox.getValue());
                 selectedMokki.setHintaPerYo(priceField.getText());
-                //updateMokkiInDatabase(selectedMokki);
+                updateMokkiInDatabase(selectedMokki);
                 table.refresh();
             }
         });
+
+        //Button
 
         HBox hbox = new HBox(10, addButton, deleteButton, editButton);
 
@@ -125,13 +127,18 @@ public class Mokkihallinnointi extends Application {
 
         //Lisää esimerkkimökit
         loadMokitFromDatabase();
-        //addSampleMokki();
+        addSampleMokki();
         return scene;
     }
 
     public void loadMokitFromDatabase() {
+
+        String url = "jdbc:mysql://localhost:3306/mokkidb";
+        String user = "java_user";
+        String password = "HirttoKoysi150!";
+
         try {
-            Connection connection = DriverManager.getConnection();
+            Connection connection = DriverManager.getConnection(url, user, password);
             String sql = "select * from mokki";
             PreparedStatement statment = connection.prepareStatement(sql);
             ResultSet resultSet = statment.executeQuery();
@@ -154,8 +161,13 @@ public class Mokkihallinnointi extends Application {
     }
 
     public void addMokkiToDatabase(Mokki mokki) {
+
+        String url = "jdbc:mysql://localhost:3306/mokkidb";
+        String user = "java_user";
+        String password = "HirttoKoysi150!";
+
         try {
-            Connection connection = DriverManager.getConnection();
+            Connection connection = DriverManager.getConnection(url, user, password);
             String sql = "INSERT INTO mokki (henkilo_maara, etaisyys, sauna, poreamme, hinta_per_yo) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, mokki.getHenkiloMaara());
@@ -170,8 +182,13 @@ public class Mokkihallinnointi extends Application {
     }
 
     public void deleteMokkiFromDatabase(int id) {
+
+        String url = "jdbc:mysql://localhost:3306/mokkidb";
+        String user = "java_user";
+        String password = "HirttoKoysi150!";
+
         try {
-            Connection connection = DriverManager.getConnection();
+            Connection connection = DriverManager.getConnection(url, user, password);
             String sql = "delete from mokki where id = ?";
             PreparedStatement statment = connection.prepareStatement(sql);
             statment.setInt(1, id);
@@ -182,8 +199,13 @@ public class Mokkihallinnointi extends Application {
     }
 
     public void updateMokkiInDatabase(Mokki mokki) {
+
+        String url = "jdbc:mysql://localhost:3306/mokkidb";
+        String user = "java_user";
+        String password = "HirttoKoysi150!";
+
         try {
-            Connection connection = DriverManager.getConnection();
+            Connection connection = DriverManager.getConnection(url, user, password);
             String sql = "update mokki set henkilo_maara = ?, etaisyys = ?, sauna = ?, poreamme = ?, hinta_per_yo = ? where id = ?";
             PreparedStatement statment = connection.prepareStatement(sql);
             statment.setString(1, mokki.getHenkiloMaara());
@@ -226,7 +248,6 @@ public class Mokkihallinnointi extends Application {
             loadMokitFromDatabase();
         }
     }
-
 
 
     public static void main(String[] args) {
