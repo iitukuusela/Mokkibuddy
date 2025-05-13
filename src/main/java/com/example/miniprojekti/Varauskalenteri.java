@@ -153,7 +153,7 @@ public class Varauskalenteri extends Application {
                         startDatePicker.getValue(),
                         endDatePicker.getValue()
                 );
-                addAsiakasToDatabase(varaus);
+                //addAsiakasToDatabase(varaus);
                 new Alert(Alert.AlertType.INFORMATION, "Varaus lisätty onnistuneesti!").show();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -178,7 +178,7 @@ public class Varauskalenteri extends Application {
         Scene scene = new Scene(vbox, 800, 600);
         return scene;
     }
-
+/*
     public void loadAsiakasFromDatabase() {
 
         String url = "jdbc:mysql://localhost:3306/asiakasdb";
@@ -296,5 +296,5 @@ public class Varauskalenteri extends Application {
             loadMokitFromDatabase();
         }
     }
-
+*/
 }
