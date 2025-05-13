@@ -133,8 +133,8 @@ public class Mokkihallinnointi extends Application {
 
     public void loadMokitFromDatabase() {
 
-        String url = "jdbc:mysql://10.143.21.11:3306/mokkidb";
-        String user = "java_user";
+        String url = "jdbc:mysql://localhost:3306/mokkidb";
+        String user = "root";
         String password = "HirttoKoysi150!";
 
         try {
@@ -162,8 +162,8 @@ public class Mokkihallinnointi extends Application {
 
     public void addMokkiToDatabase(Mokki mokki) {
 
-        String url = "jdbc:mysql://10.143.21.11:3306/mokkidb";
-        String user = "java_user";
+        String url = "jdbc:mysql://localhost:3306/mokkidb";
+        String user = "root";
         String password = "HirttoKoysi150!";
 
         try {
@@ -183,8 +183,8 @@ public class Mokkihallinnointi extends Application {
 
     public void deleteMokkiFromDatabase(int id) {
 
-        String url = "jdbc:mysql://10.143.21.11:3306/mokkidb";
-        String user = "java_user";
+        String url = "jdbc:mysql://localhost:3306/mokkidb";
+        String user = "root";
         String password = "HirttoKoysi150!";
 
         try {
@@ -200,8 +200,8 @@ public class Mokkihallinnointi extends Application {
 
     public void updateMokkiInDatabase(Mokki mokki) {
 
-        String url = "jdbc:mysql://10.143.21.11:3306/mokkidb";
-        String user = "java_user";
+        String url = "jdbc:mysql://localhost:3306/mokkidb";
+        String user = "root";
         String password = "HirttoKoysi150!";
 
         try {

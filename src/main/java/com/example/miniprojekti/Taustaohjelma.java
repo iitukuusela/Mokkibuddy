@@ -47,8 +47,6 @@ public class Taustaohjelma extends Application {
         priceField.setPromptText("Summa");
         priceField.setMaxWidth(150);
 
-        //PITÄÄKÖ OLLA MYÖS YÖVYTTYJEN ÖIDEN MÄÄRÄ??
-
         HBox summaMokkiBox = new HBox(5);
         summaMokkiBox.getChildren().addAll(mokkiField, priceField);
 
