@@ -104,18 +104,6 @@ public class Varauskalenteri extends Application {
         VBox infoVBoxs = new VBox(5);
         infoVBoxs.getChildren().addAll(peopleBox, mokkiBox, priceInfoBox);
 
-        //Nappien luonti
-        Button addButton = new Button("Lisää varaus");
-
-        Button deleteButton = new Button("Poista varaus");
-
-        Button editButton = new Button("Muokkaa varausta");
-
-        Button findButton = new Button("Etsi varaus");
-
-        HBox buttons = new HBox(5);
-        buttons.getChildren().addAll(addButton, deleteButton, editButton, findButton);
-
         //Loppu ja alkupäivät
         DatePicker startDatePicker = new DatePicker();
         DatePicker endDatePicker = new DatePicker();
@@ -134,6 +122,43 @@ public class Varauskalenteri extends Application {
 
         startDatePicker.setValue(LocalDate.now());
         endDatePicker.setValue(startDatePicker.getValue().plusDays(1));
+
+        //Nappien luonti
+        Button addButton = new Button("Lisää varaus");
+        addButton.setOnAction(e -> {
+            try {
+                Varaus varaus = new Varaus(
+                        nameField.getText(),
+                        emailField.getText(),
+                        phoneField.getText(),
+                        Integer.parseInt(peopleField.getText()),
+                        Integer.parseInt(mokkiField.getText()),
+                        lisaSankyBox.getValue().equals("Kyllä"),
+                        cleaningBox.getValue().equals("Kyllä"),
+                        lateCOBox.getValue().equals("Kyllä"),
+                        Double.parseDouble(priceField.getText()),
+                        cardNumberField.getText(),
+                        validityField.getText(),
+                        securityField.getText(),
+                        startDatePicker.getValue(),
+                        endDatePicker.getValue()
+                );
+                dao.addVarausToDatabase(varaus);
+                new Alert(Alert.AlertType.INFORMATION, "Varaus lisätty onnistuneesti!").show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Virhe varauksen lisäämisessä. Tarkista kentät.").show();
+            }
+        });
+
+        Button deleteButton = new Button("Poista varaus");
+
+        Button editButton = new Button("Muokkaa varausta");
+
+        Button findButton = new Button("Etsi varaus");
+
+        HBox buttons = new HBox(5);
+        buttons.getChildren().addAll(addButton, deleteButton, editButton, findButton);
 
         //Asettelu
         VBox vbox = new VBox(10);
