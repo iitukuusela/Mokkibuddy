@@ -1,16 +1,22 @@
 package com.example.miniprojekti;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.ComboBox;
 
+import java.sql.*;
 import java.time.LocalDate;
 
 
 public class Varauskalenteri extends Application {
+
+    public TableView<Mokki> table;
+    public ObservableList<Mokki> data;
 
     public static void main(String[] args) {
         launch(args);
@@ -25,6 +31,10 @@ public class Varauskalenteri extends Application {
     }
 
     public Scene createScene() {
+
+        table = new TableView<>();
+        data = FXCollections.observableArrayList();
+        table.setItems(data);
 
         //Lomake varauksen lisäämiseen
         TextField nameField = new TextField();
@@ -143,7 +153,7 @@ public class Varauskalenteri extends Application {
                         startDatePicker.getValue(),
                         endDatePicker.getValue()
                 );
-                dao.addVarausToDatabase(varaus);
+                addAsiakasToDatabase(varaus);
                 new Alert(Alert.AlertType.INFORMATION, "Varaus lisätty onnistuneesti!").show();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -169,6 +179,122 @@ public class Varauskalenteri extends Application {
         return scene;
     }
 
+    public void loadAsiakasFromDatabase() {
 
+        String url = "jdbc:mysql://localhost:3306/asiakasdb";
+        String user = "root";
+        String password = "HirttoKoysi150!";
+
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            String sql = "select * from mokki";
+            PreparedStatement statment = connection.prepareStatement(sql);
+            ResultSet resultSet = statment.executeQuery();
+
+            data.clear();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String henkiloMaara = resultSet.getString("henkilo_maara");
+                String etaisyys = resultSet.getString("etaisyys");
+                String sauna = resultSet.getString("sauna");
+                String poreamme = resultSet.getString("poreamme");
+                String hintaPerYo = resultSet.getString("hinta_per_yo");
+
+                Mokki mokki = new Mokki(id, henkiloMaara, etaisyys, sauna, poreamme, hintaPerYo);
+                data.add(mokki);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addAsiakasToDatabase(Varaus varaus) {
+
+        String url = "jdbc:mysql://localhost:3306/asiaksdb";
+        String user = "root";
+        String password = "HirttoKoysi150!";
+
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            String sql =
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, varaus.getHenkiloMaara());
+            statement.setString(2, varaus.getEtaisyys());
+            statement.setString(3, varaus.getSauna());
+            statement.setString(4, varaus.getPoreamme());
+            statement.setString(5, varaus.getHintaPerYo());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAsiakasFromDatabase(int id) {
+
+        String url = "jdbc:mysql://localhost:3306/asiakasdb";
+        String user = "root";
+        String password = "HirttoKoysi150!";
+
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            String sql = "delete from asiakas where id = ?";
+            PreparedStatement statment = connection.prepareStatement(sql);
+            statment.setInt(1, id);
+            statment.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateAsiakasInDatabase(Mokki mokki) {
+
+        String url = "jdbc:mysql://localhost:3306/asiaksdb";
+        String user = "root";
+        String password = "HirttoKoysi150!";
+
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            String sql = "update mokki set henkilo_maara = ?, etaisyys = ?, sauna = ?, poreamme = ?, hinta_per_yo = ? where id = ?";
+            PreparedStatement statment = connection.prepareStatement(sql);
+            statment.setString(1, mokki.getHenkiloMaara());
+            statment.setString(2, mokki.getEtaisyys());
+            statment.setString(3, mokki.getSauna());
+            statment.setString(4, mokki.getPoreamme());
+            statment.setString(5, mokki.getHintaPerYo());
+            statment.setInt(6, mokki.getId());
+            statment.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addSampleAsiakas() {
+        if (data.isEmpty()) {
+            String[][] sampleData = {
+                    {"6", "2", "Kyllä", "Ei", "210.00"},
+                    {"15", "2.8", "Kyllä", "Kyllä", "275.00"},
+                    {"20", "4", "Kyllä", "Kyllä", "290.00"},
+                    {"4", "2.2", "Kyllä", "Ei", "185.00"},
+                    {"13", "3.5", "Kyllä", "Kyllä", "270.00"},
+                    {"10", "3", "Kyllä", "Ei", "255.00"},
+                    {"8", "4.9", "Ei", "Ei", "200.00"},
+                    {"25", "6", "Kyllä", "Kyllä", "310.00"},
+                    {"5", "5", "Ei", "Ei", "150.00"},
+                    {"11", "5.5", "Kyllä", "Kyllä", "259.00"},
+            };
+
+            for (String[] mokkiData : sampleData) {
+                Mokki mokki = new Mokki(
+                        mokkiData[0],
+                        mokkiData[1],
+                        mokkiData[2],
+                        mokkiData[3],
+                        mokkiData[4]
+                );
+                addMokkiToDatabase(mokki);
+            }
+            loadMokitFromDatabase();
+        }
+    }
 
 }
