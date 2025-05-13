@@ -11,6 +11,10 @@ import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Calendar.Style;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.sql.*;
+
+
+
 
 
 public class Yleiskalenteri extends Application {
@@ -69,6 +73,48 @@ public class Yleiskalenteri extends Application {
 
         Entry varaus3 = new Entry<>("Varaus: Korhonen, 15hlö");
         liisa.addEntries(varaus3);
+
+        try {
+            // Yhdistä tietokantaan (muokkaa URL, käyttäjätunnus ja salasana)
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/asiakasdb", "root", "HirttoKoysi150!");
+
+            String sql = "SELECT * FROM varaus";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                String nimi = rs.getString("nimi");
+                int henkiloMaara = rs.getInt("henkiloMaara");
+                String mokki = rs.getString("mokki");
+                LocalDate aloitus = rs.getTimestamp("aloitus").toLocalDateTime().toLocalDate();
+                LocalDate lopetus = rs.getTimestamp("lopetus").toLocalDateTime().toLocalDate();
+
+                // Luo Entry-merkintä
+                Entry<String> entry = new Entry<>("Varaus: " + nimi + ", " + henkiloMaara + "hlö");
+                entry.setInterval(aloitus, lopetus);
+
+                // Lisää oikeaan kalenteriin mökkinimen mukaan
+                switch (mokki.toLowerCase()) {
+                    case "villa helmi" -> helmi.addEntry(entry);
+                    case "villa liisa" -> liisa.addEntry(entry);
+                    case "villa pisara" -> pisara.addEntry(entry);
+                    case "villa erik" -> erik.addEntry(entry);
+                    case "villa esko" -> esko.addEntry(entry); // jos käytössä
+                    case "villa heino" -> heino.addEntry(entry);
+                    case "villa jukka" -> jukka.addEntry(entry);
+                    case "villa pilvi" -> pilvi.addEntry(entry);
+                    case "villa kumpu" -> kumpu.addEntry(entry); // jos otat käyttöön
+                    default -> yleinen.addEntry(entry); // fallback jos mökkinimi ei täsmää
+                }
+            }
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         calendarView.getCalendarSources().addAll(myCalendarSource);
 
