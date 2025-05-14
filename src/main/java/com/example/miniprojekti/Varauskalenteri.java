@@ -424,7 +424,7 @@ public class Varauskalenteri extends Application {
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            String sql = "INSERT INTO varaus (nimi, sahkoposti, puhelin, henkilo_lkm, mokki_id, lisa_sanky, siivous, myohainen_uloskirjautuminen, summa, kortti_numero, voimassaoloaika, turvakoodi, saapumispvm, lahtopvm) " +
+            String sql = "INSERT INTO varaus (nimi, sahkoposti, puhelin, henkilo_lkm, mokki, lisa_sanky, siivous, myohainen_uloskirjautuminen, summa, kortti_numero, voimassaoloaika, turvakoodi, saapumispvm, lahtopaivamaara) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, varaus.getNimi());
@@ -465,7 +465,7 @@ public class Varauskalenteri extends Application {
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            String sql = "UPDATE varaus SET nimi = ?, sahkoposti = ?, puhelin = ?, henkilo_lkm = ?, mokki_id = ?, lisa_sanky = ?, siivous = ?, myohainen_uloskirjautuminen = ?, summa = ?, kortti_numero = ?, voimassaoloaika = ?, turvakoodi = ?, saapumispvm = ?, lahtopvm = ? WHERE id = ?";
+            String sql = "UPDATE varaus SET nimi = ?, sahkoposti = ?, puhelin = ?, henkilo_lkm = ?, mokki = ?, lisa_sanky = ?, siivous = ?, myohainen_uloskirjautuminen = ?, summa = ?, kortti_numero = ?, voimassaoloaika = ?, turvakoodi = ?, saapumispvm = ?, lahtopaivamaara = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, varaus.getNimi());
             statement.setString(2, varaus.getSahkoposti());
@@ -512,16 +512,18 @@ public class Varauskalenteri extends Application {
                 String voimassaoloaika = varausData[10];
                 String turvakoodi = varausData[11];
                 int people = Integer.parseInt(varausData[12]);
-                String phone = varausData[13];
+                String puhelin = varausData[13];
                 boolean cleaning = varausData[14].equals("Kyllä");
-
+/*
                 Varaus varaus = new Varaus(
+                        //String nimi, String sahkoposti, String puhelin, int henkiloLkm, String mokki, boolean lisaSanky, boolean siivous, boolean myohainenUloskirjautuminen, double summa, String korttiNumero, String voimassaoloaika, String turvakoodi, LocalDate saapumispvm, LocalDate lahtopvm
                         nimi,
                         sahkoposti,
-                        phone,
+                        puhelin,
                         people,
                         mokki,
                         lisaSanky,
+                        siivous,
                         cleaning,
                         myohainenLahto,
                         summa,
@@ -533,7 +535,10 @@ public class Varauskalenteri extends Application {
                 );
 
                 addVarausToDatabase(varaus);
+      */
             }
+
+
             loadVarausFromDatabase();
         }
     }
