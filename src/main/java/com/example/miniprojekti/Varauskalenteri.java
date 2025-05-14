@@ -398,7 +398,7 @@ public class Varauskalenteri extends Application {
                 String sahkoposti = resultSet.getString("sahkoposti");
                 String puhelin = resultSet.getString("puhelin");
                 int henkiloLkm = resultSet.getInt("henkilo_lkm");
-                String mokki = resultSet.getString("mokki_id");
+                String mokki = resultSet.getString("mokki");
                 boolean lisaSanky = resultSet.getBoolean("lisa_sanky");
                 boolean siivous = resultSet.getBoolean("siivous");
                 boolean myohainenUloskirjautuminen = resultSet.getBoolean("myohainen_uloskirjautuminen");
@@ -407,7 +407,7 @@ public class Varauskalenteri extends Application {
                 String voimassaoloaika = resultSet.getString("voimassaoloaika");
                 String turvakoodi = resultSet.getString("turvakoodi");
                 Date saapumispvm = resultSet.getDate("saapumispvm");
-                Date lahtopvm = resultSet.getDate("lahtopvm");
+                Date lahtopvm = resultSet.getDate("lahtopaivamaara");
 
                 Varaus varaus = new Varaus(id, nimi, sahkoposti, puhelin, henkiloLkm, mokki,
                         lisaSanky, siivous, myohainenUloskirjautuminen,
@@ -514,7 +514,7 @@ public class Varauskalenteri extends Application {
                 int people = Integer.parseInt(varausData[12]);
                 String puhelin = varausData[13];
                 boolean cleaning = varausData[14].equals("Kyllä");
-/*
+
                 Varaus varaus = new Varaus(
                         //String nimi, String sahkoposti, String puhelin, int henkiloLkm, String mokki, boolean lisaSanky, boolean siivous, boolean myohainenUloskirjautuminen, double summa, String korttiNumero, String voimassaoloaika, String turvakoodi, LocalDate saapumispvm, LocalDate lahtopvm
                         nimi,
@@ -535,7 +535,7 @@ public class Varauskalenteri extends Application {
                 );
 
                 addVarausToDatabase(varaus);
-      */
+
             }
 
 

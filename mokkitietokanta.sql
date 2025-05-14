@@ -1,3 +1,5 @@
+CREATE DATABASE mokkidb;
+USE mokkidb;
 CREATE TABLE mokki (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     henkilo_maara INTEGER,
