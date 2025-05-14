@@ -129,9 +129,15 @@ public class Mokkihallinnointi extends Application {
             }
         });
 
+        //Paluu etusivulle -painike
+        Button btPaluu = new Button("Palaa etusivulle");
+        btPaluu.setOnAction(e -> {
+            primaryStage.setScene(new Main().createScene(primaryStage));
+        });
+
         //Button
 
-        HBox hbox = new HBox(10, addButton, deleteButton, editButton);
+        HBox hbox = new HBox(10, addButton, deleteButton, editButton, btPaluu);
 
         VBox vBox = new VBox(5, nameField, capacityField, distanceField, saunaBox, hotTubBox, priceField, hbox, table);
         Scene scene = new Scene(vBox, 400, 600);
