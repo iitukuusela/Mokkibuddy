@@ -23,12 +23,22 @@ public class Mokkihallinnointi extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setScene(createScene());
-        primaryStage.setTitle("Mokkihallinnointi");
+
+        Scene mokkihallinnointiScene = createScene(primaryStage);
+        primaryStage.setScene(mokkihallinnointiScene);
+        primaryStage.setTitle("Mökkihallinnointi");
         primaryStage.show();
+
+        //tähän paluubutton oikeeseen yläkulmaan mainin buttonin ohjeiden mukaan
+        Button btPaluu = new Button("Paluu etusivulle");
+        btPaluu.setOnAction(e -> {
+            primaryStage.setScene(new Main().createScene(primaryStage));
+        });
+
+
     }
 
-    public Scene createScene() {
+    public Scene createScene(Stage primaryStage) {
 
         //Taulukko mökkien näyttämiseen
         table = new TableView<>();
@@ -118,9 +128,14 @@ public class Mokkihallinnointi extends Application {
             }
         });
 
-        //Button
+        //Paluu etusivulle -painike
+        Button btPaluu = new Button("Palaa etusivulle");
+        btPaluu.setOnAction(e -> {
+            primaryStage.setScene(new Main().createScene(primaryStage));
+        });
 
-        HBox hbox = new HBox(10, addButton, deleteButton, editButton);
+
+        HBox hbox = new HBox(10, addButton, deleteButton, editButton, btPaluu);
 
         VBox vBox = new VBox(5, capacityField, distanceField, saunaBox, hotTubBox, priceField, hbox, table);
         Scene scene = new Scene(vBox, 400, 600);
