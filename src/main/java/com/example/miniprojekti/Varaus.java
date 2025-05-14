@@ -42,7 +42,7 @@ public class Varaus {
     }
 
     public Varaus(String nimi, String sahkoposti, String puhelin, int henkiloLkm, String mokki,
-                  boolean lisaSanky, boolean siivous, boolean myohainenUloskirjautuminen, boolean cleaning,
+                  boolean lisaSanky, boolean siivous, boolean myohainenUloskirjautuminen,
                   double summa, String korttiNumero, String voimassaoloaika, String turvakoodi,
                   LocalDate saapumispvm, LocalDate lahtopvm) {
         this.id = new SimpleIntegerProperty(0);

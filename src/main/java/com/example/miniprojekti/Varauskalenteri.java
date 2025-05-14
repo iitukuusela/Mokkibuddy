@@ -209,7 +209,6 @@ public class Varauskalenteri extends Application {
                         lisaSankyBox.getValue().equals("Kyllä"),
                         cleaningBox.getValue().equals("Kyllä"),
                         lateCOBox.getValue().equals("Kyllä"),
-                        false,
                         Double.parseDouble(priceField.getText()),
                         cardNumberField.getText(),
                         validityField.getText(),
@@ -276,7 +275,7 @@ public class Varauskalenteri extends Application {
 
         vbox.getChildren().addAll(infoVBoxs, datesBox, buttons, table);
 
-        Scene scene = new Scene(vbox, 1130, 600);
+        Scene scene = new Scene(vbox, 1500, 600);
 
         loadVarausFromDatabase();
         addSampleVaraus();
@@ -416,6 +415,7 @@ public class Varauskalenteri extends Application {
                         summa, korttiNumero, voimassaoloaika, turvakoodi,
                         saapumispvm.toLocalDate(), lahtopvm.toLocalDate());
 
+                data.add(varaus);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -425,8 +425,8 @@ public class Varauskalenteri extends Application {
     public void addVarausToDatabase(Varaus varaus) {
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            String sql = "INSERT INTO varaus (nimi, sahkoposti, puhelin, henkilo_lkm, mokki, lisa_sanky, siivous, myohainen_uloskirjautuminen, cleaning, summa, kortti_numero, voimassaoloaika, turvakoodi, saapumispvm, lahtopaivamaara) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO varaus (nimi, sahkoposti, puhelin, henkilo_lkm, mokki, lisa_sanky, siivous, myohainen_uloskirjautuminen, summa, kortti_numero, voimassaoloaika, turvakoodi, saapumispvm, lahtopaivamaara) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, varaus.getNimi());
             statement.setString(2, varaus.getSahkoposti());
@@ -436,20 +436,18 @@ public class Varauskalenteri extends Application {
             statement.setBoolean(6, varaus.isLisaSanky());
             statement.setBoolean(7, varaus.isSiivous());
             statement.setBoolean(8, varaus.isMyohainenUloskirjautuminen());
-            statement.setBoolean(9, varaus.isSiivous()); // UUSI RIVI
-            statement.setDouble(10, varaus.getSumma());
-            statement.setString(11, varaus.getKorttiNumero());
-            statement.setString(12, varaus.getVoimassaoloaika());
-            statement.setString(13, varaus.getTurvakoodi());
-            statement.setDate(14, Date.valueOf(varaus.getSaapumispvm()));
-            statement.setDate(15, Date.valueOf(varaus.getLahtopvm()));
+            statement.setDouble(9, varaus.getSumma());
+            statement.setString(10, varaus.getKorttiNumero());
+            statement.setString(11, varaus.getVoimassaoloaika());
+            statement.setString(12, varaus.getTurvakoodi());
+            statement.setDate(13, Date.valueOf(varaus.getSaapumispvm()));
+            statement.setDate(14, Date.valueOf(varaus.getLahtopvm()));
 
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 
     public void deleteVarausFromDatabase(int id) {
 
@@ -495,9 +493,9 @@ public class Varauskalenteri extends Application {
     public void addSampleVaraus() {
         if (data.isEmpty()) {
             String[][] sampleData = {
-                    {"Erkki Nyström", "erkki.nystrom@gmail.com", "Erik", "210.00", "Ei", "Kyllä", "Ei", "2025-06-01", "2025-06-07", "3654 8032 0034 3856", "01/28", "985", "4", "0401234567", "Kyllä"},
-                    {"Heikki Jokinen", "heikki.jokinen@gmail.com", "Pilvi", "275.00", "Kyllä", "Ei", "Kyllä", "2025-06-03", "2025-06-07", "2255 6435 7987 7762", "05/27", "553", "2", "0509876543", "Ei"},
-                    {"Jussi Korhonen", "jussi.korhonen@icloud.com", "Liisa", "290.00", "Kyllä", "Kyllä", "Ei", "2025-06-01", "2025-06-10", "8785 0066 4653 6980", "06/29", "330", "3", "0447654321", "Kyllä"}
+                    {"Erkki Nyström", "erkki.nystrom@gmail.com", "Erik", "210.00", "Ei", "Kyllä", "Ei", "2025-06-01", "2025-06-07", "3654 8032 0034 3856", "01/28", "985", "4", "0401234567"},
+                    {"Heikki Jokinen", "heikki.jokinen@gmail.com", "Pilvi", "275.00", "Kyllä", "Ei", "Kyllä", "2025-06-03", "2025-06-07", "2255 6435 7987 7762", "05/27", "553", "2", "0509876543"},
+                    {"Jussi Korhonen", "jussi.korhonen@icloud.com", "Liisa", "290.00", "Kyllä", "Kyllä", "Ei", "2025-06-01", "2025-06-10", "8785 0066 4653 6980", "06/29", "330", "3", "0447654321"}
             };
 
             for (String[] varausData : sampleData) {
@@ -515,7 +513,6 @@ public class Varauskalenteri extends Application {
                 String turvakoodi = varausData[11];
                 int henkiloLkm = Integer.parseInt(varausData[12]);
                 String puhelin = varausData[13];
-                boolean cleaning = varausData[14].equalsIgnoreCase("Kyllä");
 
                 Varaus varaus = new Varaus(
                         nimi,
@@ -526,7 +523,6 @@ public class Varauskalenteri extends Application {
                         lisaSanky,
                         siivous,
                         myohainenLahto,
-                        cleaning,
                         summa,
                         korttiNumero,
                         voimassaoloaika,
@@ -534,8 +530,10 @@ public class Varauskalenteri extends Application {
                         saapumispvm,
                         lahtopvm
                 );
+
                 addVarausToDatabase(varaus);
             }
+
             loadVarausFromDatabase();
         }
     }

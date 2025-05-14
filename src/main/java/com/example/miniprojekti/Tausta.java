@@ -10,7 +10,7 @@ public class Tausta {
     private StringProperty sahkoposti;
     private StringProperty puhelin;
     private IntegerProperty henkiloLkm;
-    private IntegerProperty mokkiId;
+    private SimpleStringProperty mokkiId;
     private BooleanProperty lisaSanky;
     private BooleanProperty siivous;
     private BooleanProperty myohainenUloskirjautuminen;
@@ -21,13 +21,13 @@ public class Tausta {
     private StringProperty saapumispvm;
     private StringProperty lahtopvm;
 
-    public Tausta(String nimi, String sahkoposti, int mokkiId, double summa, LocalDate saapumispvm, LocalDate lahtopvm) {
+    public Tausta(String nimi, String sahkoposti, String mokkiId, double summa, LocalDate saapumispvm, LocalDate lahtopvm) {
         this.id = new SimpleIntegerProperty(0);
         this.nimi = new SimpleStringProperty(nimi);
         this.sahkoposti = new SimpleStringProperty(sahkoposti);
         this.puhelin = new SimpleStringProperty("");
         this.henkiloLkm = new SimpleIntegerProperty(0);
-        this.mokkiId = new SimpleIntegerProperty(mokkiId);
+        this.mokkiId = new SimpleStringProperty(mokkiId);
         this.lisaSanky = new SimpleBooleanProperty(false);
         this.siivous = new SimpleBooleanProperty(false);
         this.myohainenUloskirjautuminen = new SimpleBooleanProperty(false);
@@ -45,7 +45,7 @@ public class Tausta {
     public String getSahkoposti() { return sahkoposti.get(); }
     public String getPuhelin() { return puhelin.get(); }
     public int getHenkiloLkm() { return henkiloLkm.get(); }
-    public int getMokkiId() { return mokkiId.get(); }
+    public String getMokkiId() { return mokkiId.get(); }
     public boolean isLisaSanky() { return lisaSanky.get(); }
     public boolean isSiivous() { return siivous.get(); }
     public boolean isMyohainenUloskirjautuminen() { return myohainenUloskirjautuminen.get(); }
@@ -61,7 +61,7 @@ public class Tausta {
     public void setSahkoposti(String sahkoposti) { this.sahkoposti.set(sahkoposti); }
     public void setPuhelin(String puhelin) { this.puhelin.set(puhelin); }
     public void setHenkiloLkm(int henkiloLkm) { this.henkiloLkm.set(henkiloLkm); }
-    public void setMokkiId(int mokkiId) { this.mokkiId.set(mokkiId); }
+    public void setMokkiId(String mokkiId) { this.mokkiId.set(mokkiId); }
     public void setLisaSanky(boolean lisaSanky) { this.lisaSanky.set(lisaSanky); }
     public void setSiivous(boolean siivous) { this.siivous.set(siivous); }
     public void setMyohainenUloskirjautuminen(boolean myohainenUloskirjautuminen) { this.myohainenUloskirjautuminen.set(myohainenUloskirjautuminen); }
@@ -77,7 +77,7 @@ public class Tausta {
     public StringProperty sahkopostiProperty() { return sahkoposti; }
     public StringProperty puhelinProperty() { return puhelin; }
     public IntegerProperty henkiloLkmProperty() { return henkiloLkm; }
-    public IntegerProperty mokkiIdProperty() { return mokkiId; }
+    public SimpleStringProperty mokkiIdProperty() { return mokkiId; }
     public BooleanProperty lisaSankyProperty() { return lisaSanky; }
     public BooleanProperty siivousProperty() { return siivous; }
     public BooleanProperty myohainenUloskirjautuminenProperty() { return myohainenUloskirjautuminen; }
