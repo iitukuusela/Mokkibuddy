@@ -3,6 +3,10 @@ package com.example.miniprojekti;
 import com.calendarfx.model.Entry;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import com.calendarfx.view.CalendarView;
@@ -34,6 +38,17 @@ public class Yleiskalenteri extends Application {
     public Scene createScene() {
 
         CalendarView calendarView = new CalendarView(); //luo alenterin näkymän
+
+        //Paluu etusivulle -painike
+        /**Button btPaluu = new Button("Palaa etusivulle");
+         btPaluu.setOnAction(e -> {
+         primaryStage.setScene(new Main().createScene(primaryStage));
+         });**/
+
+        //hbox yläriville, jotta saadaan paluunappi sijoitettua, vaikka calendarFX on suht suljettu näkymä
+        HBox ylarivi = new HBox();
+        ylarivi.setPadding(new Insets(10));
+        //ylarivi.setAlignment(pos.CENTER);
 
         //mökkien kalenterit
         Calendar yleinen = new Calendar("yleinen");

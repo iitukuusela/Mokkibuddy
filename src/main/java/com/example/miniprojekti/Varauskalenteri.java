@@ -25,12 +25,12 @@ public class Varauskalenteri extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        primaryStage.setScene(createScene());
+        primaryStage.setScene(createScene(primaryStage));
         primaryStage.setTitle("Varauskalenteri");
         primaryStage.show();
     }
 
-    public Scene createScene() {
+    public Scene createScene(Stage primaryStage) {
 
         table = new TableView<>();
         data = FXCollections.observableArrayList();
@@ -167,8 +167,14 @@ public class Varauskalenteri extends Application {
 
         Button findButton = new Button("Etsi varaus");
 
+        //Paluu etusivulle -painike
+        Button btPaluu = new Button("Palaa etusivulle");
+        btPaluu.setOnAction(e -> {
+            primaryStage.setScene(new Main().createScene(primaryStage));
+        });
+
         HBox buttons = new HBox(5);
-        buttons.getChildren().addAll(addButton, deleteButton, editButton, findButton);
+        buttons.getChildren().addAll(addButton, deleteButton, editButton, findButton, btPaluu);
 
         //Asettelu
         VBox vbox = new VBox(10);

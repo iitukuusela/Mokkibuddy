@@ -20,12 +20,12 @@ public class Taustaohjelma extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        primaryStage.setScene(createScene());
+        primaryStage.setScene(createScene(primaryStage));
         primaryStage.setTitle("Taustaohjelma");
         primaryStage.show();
     }
 
-    public Scene createScene() {
+    public Scene createScene(Stage primaryStage) {
 
         //Lomake varauksen lisäämiseen
         TextField nameField = new TextField();
@@ -69,8 +69,14 @@ public class Taustaohjelma extends Application {
         Button createPDFButton = new Button();
         createPDFButton.setText("Luo PDF");
 
+        //Paluu etusivulle -painike
+        Button btPaluu = new Button("Palaa etusivulle");
+        btPaluu.setOnAction(e -> {
+            primaryStage.setScene(new Main().createScene(primaryStage));
+        });
+
         HBox buttonbox = new HBox(5);
-        buttonbox.getChildren().addAll(findButton, createPDFButton);
+        buttonbox.getChildren().addAll(findButton, createPDFButton, btPaluu);
 
         //Asettelu
         VBox vBox = new VBox(5);

@@ -18,8 +18,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        Scene scene = createScene(primaryStage);
-        primaryStage.setScene(scene);
+        Scene mainScene = createScene(primaryStage);
+        primaryStage.setScene(mainScene);
         primaryStage.setTitle("Mökkivarausjärjestelmä");
         primaryStage.show();
 
@@ -56,17 +56,17 @@ public class Main extends Application {
 
         btvarauskalenteri.setOnAction(e -> {
             Varauskalenteri varauskalenteri = new Varauskalenteri();
-            primaryStage.setScene(varauskalenteri.createScene());
+            primaryStage.setScene(varauskalenteri.createScene(primaryStage));
         });
 
         btmokkihallinnointi.setOnAction(e -> {
             Mokkihallinnointi mokkihallinnointi = new Mokkihallinnointi();
-            primaryStage.setScene(mokkihallinnointi.createScene());
+            primaryStage.setScene(mokkihallinnointi.createScene(primaryStage));
         });
 
         bttaustaohjelma.setOnAction(e -> {
             Taustaohjelma taustaohjelma = new Taustaohjelma();
-            primaryStage.setScene(taustaohjelma.createScene());
+            primaryStage.setScene(taustaohjelma.createScene(primaryStage));
         });
 
         return scene;
