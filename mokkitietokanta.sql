@@ -1,7 +1,7 @@
 CREATE DATABASE mokkidb;
 USE mokkidb;
 CREATE TABLE mokki (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     henkilo_maara INTEGER,
     etaisyys TEXT,
     sauna TEXT,
