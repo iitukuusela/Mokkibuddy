@@ -26,9 +26,7 @@ public class Varauskalenteri extends Application {
     private ComboBox<String> lisaSankyBox, cleaningBox, lateCOBox;
     private DatePicker saapumispvmField, lahtopvmField;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) { launch(args); }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
