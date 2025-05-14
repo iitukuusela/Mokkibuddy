@@ -11,8 +11,9 @@ module com.example.miniprojekti {
     requires org.threeten.extra;
     requires org.slf4j;
     requires ical4j.core;
-
-
+    requires java.desktop;
+    requires kernel;
+    requires layout;
 
 
     opens com.example.miniprojekti to javafx.fxml;
