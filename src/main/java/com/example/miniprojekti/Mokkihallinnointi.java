@@ -135,8 +135,6 @@ public class Mokkihallinnointi extends Application {
             primaryStage.setScene(new Main().createScene(primaryStage));
         });
 
-        //Button
-
         HBox hbox = new HBox(10, addButton, deleteButton, editButton, btPaluu);
 
         VBox vBox = new VBox(5, nameField, capacityField, distanceField, saunaBox, hotTubBox, priceField, hbox, table);
