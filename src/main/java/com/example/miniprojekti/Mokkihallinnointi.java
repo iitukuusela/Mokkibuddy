@@ -21,14 +21,18 @@ public class Mokkihallinnointi extends Application {
     public TableView<Mokki> table;
     public ObservableList<Mokki> data;
 
+    public String url = "jdbc:mysql://localhost:3306/mokkidb";
+    public String user = "root";
+    public String password = "HirttoKoysi150!";
+
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setScene(createScene());
+        primaryStage.setScene(createScene(primaryStage));
         primaryStage.setTitle("Mokkihallinnointi");
         primaryStage.show();
     }
 
-    public Scene createScene() {
+    public Scene createScene(Stage primaryStage) {
 
         //Taulukko mökkien näyttämiseen
         table = new TableView<>();
@@ -140,10 +144,6 @@ public class Mokkihallinnointi extends Application {
 
     public void loadMokitFromDatabase() {
 
-        String url = "jdbc:mysql://localhost:3306/mokkidb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
-
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
             String sql = "select * from mokki";
@@ -169,10 +169,6 @@ public class Mokkihallinnointi extends Application {
 
     public void addMokkiToDatabase(Mokki mokki) {
 
-        String url = "jdbc:mysql://localhost:3306/mokkidb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
-
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
             String sql = "INSERT INTO mokki (henkilo_maara, etaisyys, sauna, poreamme, hinta_per_yo) VALUES (?, ?, ?, ?, ?)";
@@ -190,10 +186,6 @@ public class Mokkihallinnointi extends Application {
 
     public void deleteMokkiFromDatabase(int id) {
 
-        String url = "jdbc:mysql://localhost:3306/mokkidb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
-
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
             String sql = "delete from mokki where id = ?";
@@ -206,10 +198,6 @@ public class Mokkihallinnointi extends Application {
     }
 
     public void updateMokkiInDatabase(Mokki mokki) {
-
-        String url = "jdbc:mysql://localhost:3306/mokkidb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);

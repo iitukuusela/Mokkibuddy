@@ -15,22 +15,28 @@ import java.time.LocalDate;
 
 public class Varauskalenteri extends Application {
 
-    public TableView<Mokki> table;
-    public ObservableList<Mokki> data;
+    public TableView<Varaus> table;
+    public ObservableList<Varaus> data;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public String url = "jdbc:mysql://localhost:3306/asiakasdb";
+    public String user = "root";
+    public String password = "HirttoKoysi150!";
+
+    private TextField nameField, emailField, phoneField, peopleField, mokkiField, summaField, korttiNumeroField, voimassaoloaikaField, turvakoodiField;
+    private ComboBox<String> lisaSankyBox, cleaningBox, lateCOBox;
+    private DatePicker saapumispvmField, lahtopvmField;
+
+    public static void main(String[] args) { launch(args); }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        primaryStage.setScene(createScene());
+        primaryStage.setScene(createScene(primaryStage));
         primaryStage.setTitle("Varauskalenteri");
         primaryStage.show();
     }
 
-    public Scene createScene() {
+    public Scene createScene(Stage primaryStage) {
 
         table = new TableView<>();
         data = FXCollections.observableArrayList();
@@ -82,12 +88,10 @@ public class Varauskalenteri extends Application {
         //lateCOField.setPromptText("Myöhäinen uloskirjautuminen");
         //lateCOField.setMaxWidth(150);
 
-
         ComboBox<String> lateCOBox = new ComboBox<>();
         lateCOBox.getItems().addAll("Kyllä", "Ei");
         lateCOBox.setPromptText("Myöhäinen uloskirjautuminen");
         lateCOBox.setMaxWidth(250);
-
 
         HBox mokkiBox = new HBox(5);
         mokkiBox.getChildren().addAll(mokkiField, lisaSankyBox, cleaningBox, lateCOBox);
@@ -153,22 +157,58 @@ public class Varauskalenteri extends Application {
                         startDatePicker.getValue(),
                         endDatePicker.getValue()
                 );
-                //addAsiakasToDatabase(varaus);
-                new Alert(Alert.AlertType.INFORMATION, "Varaus lisätty onnistuneesti!").show();
+                addVarausToDatabase(varaus);
+                loadVarausFromDatabase();
             } catch (Exception ex) {
                 ex.printStackTrace();
-                new Alert(Alert.AlertType.ERROR, "Virhe varauksen lisäämisessä. Tarkista kentät.").show();
             }
         });
 
         Button deleteButton = new Button("Poista varaus");
+        deleteButton.setOnAction(e -> {
+            Varaus selectedVaraus = table.getSelectionModel().getSelectedItem();
+            if (selectedVaraus != null) {
+                deleteVarausFromDatabase(selectedVaraus.getId());
+                data.remove(selectedVaraus);
+            }
+        });
 
         Button editButton = new Button("Muokkaa varausta");
+        editButton.setOnAction(e -> {
+            Varaus selectedVaraus = table.getSelectionModel().getSelectedItem();
+            if (selectedVaraus != null) {
+                selectedVaraus.setNimi(nameField.getText());
+                selectedVaraus.setSahkoposti(emailField.getText());
+                selectedVaraus.setPuhelin(phoneField.getText());
+                selectedVaraus.setHenkiloLkm(Integer.parseInt(peopleField.getText()));
+                selectedVaraus.setMokkiId(Integer.parseInt(mokkiField.getText()));
+                selectedVaraus.setLisaSanky(lisaSankyBox.getValue().equals("Kyllä"));
+                selectedVaraus.setSiivous(cleaningBox.getValue().equals("Kyllä"));
+                selectedVaraus.setMyohainenUloskirjautuminen(lateCOBox.getValue().equals("Kyllä"));
+                selectedVaraus.setSumma(Double.parseDouble(priceField.getText()));
+                selectedVaraus.setKorttiNumero(cardNumberField.getText());
+                selectedVaraus.setVoimassaoloaika(validityField.getText());
+                selectedVaraus.setTurvakoodi(securityField.getText());
+                selectedVaraus.setSaapumispvm(startDatePicker.getValue());
+                selectedVaraus.setLahtopvm(endDatePicker.getValue());
+                updateVarausInDatabase(selectedVaraus);
+                table.refresh();
+            }
+        });
 
         Button findButton = new Button("Etsi varaus");
+        findButton.setOnAction(e -> {
+            etsiVaraus();
+        });
+
+        //Paluu etusivulle -painike
+        Button btPaluu = new Button("Palaa etusivulle");
+        btPaluu.setOnAction(e -> {
+            primaryStage.setScene(new Main().createScene(primaryStage));
+        });
 
         HBox buttons = new HBox(5);
-        buttons.getChildren().addAll(addButton, deleteButton, editButton, findButton);
+        buttons.getChildren().addAll(addButton, deleteButton, editButton, findButton, btPaluu);
 
         //Asettelu
         VBox vbox = new VBox(10);
@@ -176,68 +216,184 @@ public class Varauskalenteri extends Application {
         vbox.getChildren().addAll(infoVBoxs, datesBox, buttons);
 
         Scene scene = new Scene(vbox, 800, 600);
+
+        loadVarausFromDatabase();
+        //addSampleVaraus();
+
         return scene;
     }
-/*
-    public void loadAsiakasFromDatabase() {
 
-        String url = "jdbc:mysql://localhost:3306/asiakasdb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
+    private void etsiVaraus() {
+
+        String nimiSearch = nameField.getText().toLowerCase();
+        String sahkopostiSearch = emailField.getText().toLowerCase();
+        String puhelinSearch = phoneField.getText().toLowerCase();
+        String peopleSearch = peopleField.getText();
+        String mokkiSearch = mokkiField.getText().toLowerCase();
+        String lisaSankySearch = lisaSankyBox.getValue();
+        String siivousSearch = cleaningBox.getValue();
+        String lateCOSearch = lateCOBox.getValue();
+        String summaSearch = summaField.getText();
+        String korttiNumeroSearch = korttiNumeroField.getText();
+        String voimassaoloaikaSearch = voimassaoloaikaField.getText();
+        String turvakoodiSearch = turvakoodiField.getText();
+        String saapumispvmSearch = saapumispvmField.getValue().toString();
+        String lahtopvmSearch = lahtopvmField.getValue().toString();
+
+        // Suodatetaan alkuperäinen lista (data)
+        ObservableList<Varaus> filteredData = FXCollections.observableArrayList();
+
+        for (Varaus varaus : data) {
+            boolean matches = true;
+
+            // Suodata nimellä
+            if (!nimiSearch.isEmpty() && !varaus.getNimi().toLowerCase().contains(nimiSearch)) {
+                matches = false;
+            }
+
+            // Suodata sähköpostilla
+            if (!sahkopostiSearch.isEmpty() && !varaus.getSahkoposti().toLowerCase().contains(sahkopostiSearch)) {
+                matches = false;
+            }
+
+            // Suodata puhelimella
+            if (!puhelinSearch.isEmpty() && !varaus.getPuhelin().toLowerCase().contains(puhelinSearch)) {
+                matches = false;
+            }
+
+            // Suodata henkilömäärällä
+            if (!peopleSearch.isEmpty() && !String.valueOf(varaus.getHenkiloLkm()).contains(peopleSearch)) {
+                matches = false;
+            }
+
+            // Suodata mökin ID:llä
+            if (!mokkiSearch.isEmpty() && !String.valueOf(varaus.getMokkiId()).contains(mokkiSearch)) {
+                matches = false;
+            }
+
+            // Suodata lisäsängyn tarpeella
+            if (lisaSankySearch != null && !lisaSankySearch.isEmpty() && varaus.isLisaSanky() != Boolean.parseBoolean(lisaSankySearch)) {
+                matches = false;
+            }
+
+            // Suodata siivouspalvelulla
+            if (siivousSearch != null && !siivousSearch.isEmpty() && varaus.isSiivous() != Boolean.parseBoolean(siivousSearch)) {
+                matches = false;
+            }
+
+            // Suodata myöhäisellä uloskirjautumisella
+            if (lateCOSearch != null && !lateCOSearch.isEmpty() && varaus.isMyohainenUloskirjautuminen() != Boolean.parseBoolean(lateCOSearch)) {
+                matches = false;
+            }
+
+            // Suodata summalla
+            if (!summaSearch.isEmpty() && varaus.getSumma() != Double.parseDouble(summaSearch)) {
+                matches = false;
+            }
+
+            // Suodata korttinumeroilla
+            if (!korttiNumeroSearch.isEmpty() && !varaus.getKorttiNumero().contains(korttiNumeroSearch)) {
+                matches = false;
+            }
+
+            // Suodata voimassaoloajalla
+            if (!voimassaoloaikaSearch.isEmpty() && !varaus.getVoimassaoloaika().contains(voimassaoloaikaSearch)) {
+                matches = false;
+            }
+
+            // Suodata turvakoodilla
+            if (!turvakoodiSearch.isEmpty() && !varaus.getTurvakoodi().contains(turvakoodiSearch)) {
+                matches = false;
+            }
+
+            // Suodata saapumispäivämäärällä
+            if (!saapumispvmSearch.isEmpty() && !varaus.getSaapumispvm().toString().contains(saapumispvmSearch)) {
+                matches = false;
+            }
+
+            // Suodata lähtöpvm:llä
+            if (!lahtopvmSearch.isEmpty() && !varaus.getLahtopvm().toString().contains(lahtopvmSearch)) {
+                matches = false;
+            }
+
+            // Jos kaikki hakuehdot täyttyvät, lisätään varaus tuloksiin
+            if (matches) {
+                filteredData.add(varaus);
+            }
+        }
+        table.setItems(filteredData);
+    }
+
+    public void loadVarausFromDatabase() {
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            String sql = "select * from mokki";
+            String sql = "select * from varaus";
             PreparedStatement statment = connection.prepareStatement(sql);
             ResultSet resultSet = statment.executeQuery();
 
             data.clear();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
-                String henkiloMaara = resultSet.getString("henkilo_maara");
-                String etaisyys = resultSet.getString("etaisyys");
-                String sauna = resultSet.getString("sauna");
-                String poreamme = resultSet.getString("poreamme");
-                String hintaPerYo = resultSet.getString("hinta_per_yo");
+                String nimi = resultSet.getString("nimi");
+                String sahkoposti = resultSet.getString("sahkoposti");
+                String puhelin = resultSet.getString("puhelin");
+                int henkiloLkm = resultSet.getInt("henkilo_lkm");
+                int mokkiId = resultSet.getInt("mokki_id");
+                boolean lisaSanky = resultSet.getBoolean("lisa_sanky");
+                boolean siivous = resultSet.getBoolean("siivous");
+                boolean myohainenUloskirjautuminen = resultSet.getBoolean("myohainen_uloskirjautuminen");
+                double summa = resultSet.getDouble("summa");
+                String korttiNumero = resultSet.getString("kortti_numero");
+                String voimassaoloaika = resultSet.getString("voimassaoloaika");
+                String turvakoodi = resultSet.getString("turvakoodi");
+                Date saapumispvm = resultSet.getDate("saapumispvm");
+                Date lahtopvm = resultSet.getDate("lahtopvm");
 
-                Mokki mokki = new Mokki(id, henkiloMaara, etaisyys, sauna, poreamme, hintaPerYo);
-                data.add(mokki);
+                Varaus varaus = new Varaus(id, nimi, sahkoposti, puhelin, henkiloLkm, mokkiId,
+                        lisaSanky, siivous, myohainenUloskirjautuminen,
+                        summa, korttiNumero, voimassaoloaika, turvakoodi,
+                        saapumispvm.toLocalDate(), lahtopvm.toLocalDate());
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void addAsiakasToDatabase(Varaus varaus) {
-
-        String url = "jdbc:mysql://localhost:3306/asiaksdb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
+    public void addVarausToDatabase(Varaus varaus) {
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            String sql =
+            String sql = "INSERT INTO varaus (nimi, sahkoposti, puhelin, henkilo_lkm, mokki_id, lisa_sanky, siivous, myohainen_uloskirjautuminen, summa, kortti_numero, voimassaoloaika, turvakoodi, saapumispvm, lahtopvm) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, varaus.getHenkiloMaara());
-            statement.setString(2, varaus.getEtaisyys());
-            statement.setString(3, varaus.getSauna());
-            statement.setString(4, varaus.getPoreamme());
-            statement.setString(5, varaus.getHintaPerYo());
+            statement.setString(1, varaus.getNimi());
+            statement.setString(2, varaus.getSahkoposti());
+            statement.setString(3, varaus.getPuhelin());
+            statement.setInt(4, varaus.getHenkiloLkm());
+            statement.setInt(5, varaus.getMokkiId());
+            statement.setBoolean(6, varaus.isLisaSanky());
+            statement.setBoolean(7, varaus.isSiivous());
+            statement.setBoolean(8, varaus.isMyohainenUloskirjautuminen());
+            statement.setDouble(9, varaus.getSumma());
+            statement.setString(10, varaus.getKorttiNumero());
+            statement.setString(11, varaus.getVoimassaoloaika());
+            statement.setString(12, varaus.getTurvakoodi());
+            statement.setDate(13, Date.valueOf(varaus.getSaapumispvm()));
+            statement.setDate(14, Date.valueOf(varaus.getLahtopvm()));
+
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void deleteAsiakasFromDatabase(int id) {
-
-        String url = "jdbc:mysql://localhost:3306/asiakasdb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
+    public void deleteVarausFromDatabase(int id) {
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            String sql = "delete from asiakas where id = ?";
+            String sql ="DELETE FROM varaus WHERE id = ?";
             PreparedStatement statment = connection.prepareStatement(sql);
             statment.setInt(1, id);
             statment.executeUpdate();
@@ -246,54 +402,53 @@ public class Varauskalenteri extends Application {
         }
     }
 
-    public void updateAsiakasInDatabase(Mokki mokki) {
-
-        String url = "jdbc:mysql://localhost:3306/asiaksdb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
+    public void updateVarausInDatabase(Varaus varaus) {
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            String sql = "update mokki set henkilo_maara = ?, etaisyys = ?, sauna = ?, poreamme = ?, hinta_per_yo = ? where id = ?";
-            PreparedStatement statment = connection.prepareStatement(sql);
-            statment.setString(1, mokki.getHenkiloMaara());
-            statment.setString(2, mokki.getEtaisyys());
-            statment.setString(3, mokki.getSauna());
-            statment.setString(4, mokki.getPoreamme());
-            statment.setString(5, mokki.getHintaPerYo());
-            statment.setInt(6, mokki.getId());
-            statment.executeUpdate();
+            String sql = "UPDATE varaus SET nimi = ?, sahkoposti = ?, puhelin = ?, henkilo_lkm = ?, mokki_id = ?, lisa_sanky = ?, siivous = ?, myohainen_uloskirjautuminen = ?, summa = ?, kortti_numero = ?, voimassaoloaika = ?, turvakoodi = ?, saapumispvm = ?, lahtopvm = ? WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, varaus.getNimi());
+            statement.setString(2, varaus.getSahkoposti());
+            statement.setString(3, varaus.getPuhelin());
+            statement.setInt(4, varaus.getHenkiloLkm());
+            statement.setInt(5, varaus.getMokkiId());
+            statement.setBoolean(6, varaus.isLisaSanky());
+            statement.setBoolean(7, varaus.isSiivous());
+            statement.setBoolean(8, varaus.isMyohainenUloskirjautuminen());
+            statement.setDouble(9, varaus.getSumma());
+            statement.setString(10, varaus.getKorttiNumero());
+            statement.setString(11, varaus.getVoimassaoloaika());
+            statement.setString(12, varaus.getTurvakoodi());
+            statement.setDate(13, Date.valueOf(varaus.getSaapumispvm()));
+            statement.setDate(14, Date.valueOf(varaus.getLahtopvm()));
+            statement.setInt(15, varaus.getId());
+
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-    public void addSampleAsiakas() {
+/*
+    public void addSampleVaraus() {
         if (data.isEmpty()) {
             String[][] sampleData = {
                     {"6", "2", "Kyllä", "Ei", "210.00"},
                     {"15", "2.8", "Kyllä", "Kyllä", "275.00"},
                     {"20", "4", "Kyllä", "Kyllä", "290.00"},
-                    {"4", "2.2", "Kyllä", "Ei", "185.00"},
-                    {"13", "3.5", "Kyllä", "Kyllä", "270.00"},
-                    {"10", "3", "Kyllä", "Ei", "255.00"},
-                    {"8", "4.9", "Ei", "Ei", "200.00"},
-                    {"25", "6", "Kyllä", "Kyllä", "310.00"},
-                    {"5", "5", "Ei", "Ei", "150.00"},
-                    {"11", "5.5", "Kyllä", "Kyllä", "259.00"},
             };
 
-            for (String[] mokkiData : sampleData) {
-                Mokki mokki = new Mokki(
-                        mokkiData[0],
-                        mokkiData[1],
-                        mokkiData[2],
-                        mokkiData[3],
-                        mokkiData[4]
+            for (String[] varausData : sampleData) {
+                Varaus varaus = new Varaus(
+                        varausData[0],
+                        varausData[1],
+                        varausData[2],
+                        varausData[3],
+                        varausData[4]
                 );
-                addMokkiToDatabase(mokki);
+                addVarausToDatabase(varaus);
             }
-            loadMokitFromDatabase();
+            loadVarausFromDatabase();
         }
     }
 */
