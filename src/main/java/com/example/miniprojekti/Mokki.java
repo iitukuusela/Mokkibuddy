@@ -4,6 +4,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 
 public class Mokki {
     private final IntegerProperty id;
@@ -86,4 +87,19 @@ public class Mokki {
     public StringProperty hintaPerYoProperty() {
         return hintaPerYo;
     }
+
+    public final StringProperty nimi = new SimpleStringProperty();
+    
+    public StringProperty nimiProperty() {
+        return nimi;
+    }
+    
+    public String getNimi() {
+        return nimi.get();
+    }
+    
+    public void setNimi(String nimi) {
+        this.nimi.set(nimi);
+    }
 }
+
