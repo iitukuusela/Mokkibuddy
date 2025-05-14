@@ -42,6 +42,65 @@ public class Varauskalenteri extends Application {
         data = FXCollections.observableArrayList();
         table.setItems(data);
 
+        TableColumn<Varaus, String> nimiColumn = new TableColumn<>("Nimi");
+        nimiColumn.setCellValueFactory(cellData -> cellData.getValue().nimiProperty());
+
+        TableColumn<Varaus, String> sahkopostiColumn = new TableColumn<>("Sähköposti");
+        sahkopostiColumn.setCellValueFactory(cellData -> cellData.getValue().sahkopostiProperty());
+
+        TableColumn<Varaus, String> puhelinColumn = new TableColumn<>("Puhelin");
+        puhelinColumn.setCellValueFactory(cellData -> cellData.getValue().puhelinProperty());
+
+        TableColumn<Varaus, Number> henkiloLkmColumn = new TableColumn<>("Henkilömäärä");
+        henkiloLkmColumn.setCellValueFactory(cellData -> cellData.getValue().henkiloLkmProperty());
+
+        TableColumn<Varaus, String> mokkiIdColumn = new TableColumn<>("Mökki");
+        mokkiIdColumn.setCellValueFactory(cellData -> cellData.getValue().mokkiProperty());
+
+        TableColumn<Varaus, Boolean> lisaSankyColumn = new TableColumn<>("Lisäpatja");
+        lisaSankyColumn.setCellValueFactory(cellData -> cellData.getValue().lisaSankyProperty());
+
+        TableColumn<Varaus, Boolean> siivousColumn = new TableColumn<>("Siivous");
+        siivousColumn.setCellValueFactory(cellData -> cellData.getValue().siivousProperty());
+
+        TableColumn<Varaus, Boolean> myohainenUloskirjautuminenColumn = new TableColumn<>("Myöhäinen Uloskirjautuminen");
+        myohainenUloskirjautuminenColumn.setCellValueFactory(cellData -> cellData.getValue().myohainenUloskirjautuminenProperty());
+
+        TableColumn<Varaus, Number> summaColumn = new TableColumn<>("Summa");
+        summaColumn.setCellValueFactory(cellData -> cellData.getValue().summaProperty());
+
+        TableColumn<Varaus, String> korttiNumeroColumn = new TableColumn<>("Korttinumero");
+        korttiNumeroColumn.setCellValueFactory(cellData -> cellData.getValue().korttiNumeroProperty());
+
+        TableColumn<Varaus, String> voimassaoloaikaColumn = new TableColumn<>("Voimassaoloaika");
+        voimassaoloaikaColumn.setCellValueFactory(cellData -> cellData.getValue().voimassaoloaikaProperty());
+
+        TableColumn<Varaus, String> turvakoodiColumn = new TableColumn<>("Turvakoodi");
+        turvakoodiColumn.setCellValueFactory(cellData -> cellData.getValue().turvakoodiProperty());
+
+        TableColumn<Varaus, String> saapumispvmColumn = new TableColumn<>("Saapumispvm");
+        saapumispvmColumn.setCellValueFactory(cellData -> cellData.getValue().saapumispvmProperty());
+
+        TableColumn<Varaus, String> lahtopvmColumn = new TableColumn<>("Lähtöpvm");
+        lahtopvmColumn.setCellValueFactory(cellData -> cellData.getValue().lahtopvmProperty());
+
+        table.getColumns().addAll(
+                nimiColumn,
+                sahkopostiColumn,
+                puhelinColumn,
+                henkiloLkmColumn,
+                mokkiIdColumn,
+                lisaSankyColumn,
+                siivousColumn,
+                myohainenUloskirjautuminenColumn,
+                summaColumn,
+                korttiNumeroColumn,
+                voimassaoloaikaColumn,
+                turvakoodiColumn,
+                saapumispvmColumn,
+                lahtopvmColumn
+        );
+
         //Lomake varauksen lisäämiseen
         TextField nameField = new TextField();
         nameField.setPromptText("Varaajan nimi");
@@ -146,7 +205,7 @@ public class Varauskalenteri extends Application {
                         emailField.getText(),
                         phoneField.getText(),
                         Integer.parseInt(peopleField.getText()),
-                        Integer.parseInt(mokkiField.getText()),
+                        mokkiField.getText(),
                         lisaSankyBox.getValue().equals("Kyllä"),
                         cleaningBox.getValue().equals("Kyllä"),
                         lateCOBox.getValue().equals("Kyllä"),
@@ -181,7 +240,7 @@ public class Varauskalenteri extends Application {
                 selectedVaraus.setSahkoposti(emailField.getText());
                 selectedVaraus.setPuhelin(phoneField.getText());
                 selectedVaraus.setHenkiloLkm(Integer.parseInt(peopleField.getText()));
-                selectedVaraus.setMokkiId(Integer.parseInt(mokkiField.getText()));
+                selectedVaraus.setMokki(mokkiField.getText());
                 selectedVaraus.setLisaSanky(lisaSankyBox.getValue().equals("Kyllä"));
                 selectedVaraus.setSiivous(cleaningBox.getValue().equals("Kyllä"));
                 selectedVaraus.setMyohainenUloskirjautuminen(lateCOBox.getValue().equals("Kyllä"));
@@ -213,12 +272,12 @@ public class Varauskalenteri extends Application {
         //Asettelu
         VBox vbox = new VBox(10);
 
-        vbox.getChildren().addAll(infoVBoxs, datesBox, buttons);
+        vbox.getChildren().addAll(infoVBoxs, datesBox, buttons, table);
 
-        Scene scene = new Scene(vbox, 800, 600);
+        Scene scene = new Scene(vbox, 1130, 600);
 
         loadVarausFromDatabase();
-        //addSampleVaraus();
+        addSampleVaraus();
 
         return scene;
     }
@@ -267,7 +326,7 @@ public class Varauskalenteri extends Application {
             }
 
             // Suodata mökin ID:llä
-            if (!mokkiSearch.isEmpty() && !String.valueOf(varaus.getMokkiId()).contains(mokkiSearch)) {
+            if (!mokkiSearch.isEmpty() && !String.valueOf(varaus.getMokki()).contains(mokkiSearch)) {
                 matches = false;
             }
 
@@ -339,7 +398,7 @@ public class Varauskalenteri extends Application {
                 String sahkoposti = resultSet.getString("sahkoposti");
                 String puhelin = resultSet.getString("puhelin");
                 int henkiloLkm = resultSet.getInt("henkilo_lkm");
-                int mokkiId = resultSet.getInt("mokki_id");
+                String mokki = resultSet.getString("mokki_id");
                 boolean lisaSanky = resultSet.getBoolean("lisa_sanky");
                 boolean siivous = resultSet.getBoolean("siivous");
                 boolean myohainenUloskirjautuminen = resultSet.getBoolean("myohainen_uloskirjautuminen");
@@ -350,7 +409,7 @@ public class Varauskalenteri extends Application {
                 Date saapumispvm = resultSet.getDate("saapumispvm");
                 Date lahtopvm = resultSet.getDate("lahtopvm");
 
-                Varaus varaus = new Varaus(id, nimi, sahkoposti, puhelin, henkiloLkm, mokkiId,
+                Varaus varaus = new Varaus(id, nimi, sahkoposti, puhelin, henkiloLkm, mokki,
                         lisaSanky, siivous, myohainenUloskirjautuminen,
                         summa, korttiNumero, voimassaoloaika, turvakoodi,
                         saapumispvm.toLocalDate(), lahtopvm.toLocalDate());
@@ -372,7 +431,7 @@ public class Varauskalenteri extends Application {
             statement.setString(2, varaus.getSahkoposti());
             statement.setString(3, varaus.getPuhelin());
             statement.setInt(4, varaus.getHenkiloLkm());
-            statement.setInt(5, varaus.getMokkiId());
+            statement.setString(5, varaus.getMokki());
             statement.setBoolean(6, varaus.isLisaSanky());
             statement.setBoolean(7, varaus.isSiivous());
             statement.setBoolean(8, varaus.isMyohainenUloskirjautuminen());
@@ -412,7 +471,7 @@ public class Varauskalenteri extends Application {
             statement.setString(2, varaus.getSahkoposti());
             statement.setString(3, varaus.getPuhelin());
             statement.setInt(4, varaus.getHenkiloLkm());
-            statement.setInt(5, varaus.getMokkiId());
+            statement.setString(5, varaus.getMokki());
             statement.setBoolean(6, varaus.isLisaSanky());
             statement.setBoolean(7, varaus.isSiivous());
             statement.setBoolean(8, varaus.isMyohainenUloskirjautuminen());
@@ -429,27 +488,54 @@ public class Varauskalenteri extends Application {
             e.printStackTrace();
         }
     }
-/*
+
     public void addSampleVaraus() {
         if (data.isEmpty()) {
             String[][] sampleData = {
-                    {"6", "2", "Kyllä", "Ei", "210.00"},
-                    {"15", "2.8", "Kyllä", "Kyllä", "275.00"},
-                    {"20", "4", "Kyllä", "Kyllä", "290.00"},
+                    {"Erkki Nyström", "erkki.nystrom@gmail.com", "Erik", "210.00", "Ei", "Kyllä", "Ei", "2025-06-01", "2025-06-07", "3654 8032 0034 3856", "01/28", "985", "4", "0401234567", "Kyllä"},
+                    {"Heikki Jokinen", "heikki.jokinen@gmail.com", "Pilvi", "275.00", "Kyllä", "Ei", "Kyllä", "2025-06-03", "2025-06-07", "2255 6435 7987 7762", "05/27", "553", "2", "0509876543", "Ei"},
+                    {"Jussi Korhonen", "jussi.korhonen@icloud.com", "Liisa", "290.00", "Kyllä", "Kyllä", "Ei", "2025-06-01", "2025-06-10", "8785 0066 4653 6980", "06/29", "330", "3", "0447654321", "Kyllä"}
             };
 
             for (String[] varausData : sampleData) {
+                // Luo uusi varaus
+                String nimi = varausData[0];
+                String sahkoposti = varausData[1];
+                String mokki = varausData[2];
+                double summa = Double.parseDouble(varausData[3]);
+                boolean lisaSanky = varausData[4].equals("Kyllä");
+                boolean siivous = varausData[5].equals("Kyllä");
+                boolean myohainenLahto = varausData[6].equals("Kyllä");
+                LocalDate saapumispvm = LocalDate.parse(varausData[7]);
+                LocalDate lahtopvm = LocalDate.parse(varausData[8]);
+                String korttiNumero = varausData[9];
+                String voimassaoloaika = varausData[10];
+                String turvakoodi = varausData[11];
+                int people = Integer.parseInt(varausData[12]);
+                String phone = varausData[13];
+                boolean cleaning = varausData[14].equals("Kyllä");
+
                 Varaus varaus = new Varaus(
-                        varausData[0],
-                        varausData[1],
-                        varausData[2],
-                        varausData[3],
-                        varausData[4]
+                        nimi,
+                        sahkoposti,
+                        phone,
+                        people,
+                        mokki,
+                        lisaSanky,
+                        cleaning,
+                        myohainenLahto,
+                        summa,
+                        korttiNumero,
+                        voimassaoloaika,
+                        turvakoodi,
+                        saapumispvm,
+                        lahtopvm
                 );
+
                 addVarausToDatabase(varaus);
             }
             loadVarausFromDatabase();
         }
     }
-*/
+
 }

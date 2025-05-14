@@ -22,8 +22,8 @@ import java.util.List;
 
 public class Taustaohjelma extends Application {
 
-    public TableView<Varaus> table;
-    public ObservableList<Varaus> data;
+    public TableView<Tausta> table;
+    public ObservableList<Tausta> data;
 
     public String url = "jdbc:mysql://localhost:3306/asiakasdb";
     public String user = "root";
@@ -51,22 +51,22 @@ public class Taustaohjelma extends Application {
         data = FXCollections.observableArrayList();
         table.setItems(data);
 
-        TableColumn<Varaus, String> nameColumn = new TableColumn<>("Varaajan nimi");
+        TableColumn<Tausta, String> nameColumn = new TableColumn<>("Varaajan nimi");
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nimiProperty());
 
-        TableColumn<Varaus, String> mailColumn = new TableColumn<>("Sähköposti");
+        TableColumn<Tausta, String> mailColumn = new TableColumn<>("Sähköposti");
         mailColumn.setCellValueFactory(cellData -> cellData.getValue().sahkopostiProperty());
 
-        TableColumn<Varaus, Number> mokkiColumn = new TableColumn<>("Mökki");
+        TableColumn<Tausta, Number> mokkiColumn = new TableColumn<>("Mökki");
         mokkiColumn.setCellValueFactory(cellData -> cellData.getValue().mokkiIdProperty());
 
-        TableColumn<Varaus, Number> summaColumn = new TableColumn<>("Summa");
+        TableColumn<Tausta, Number> summaColumn = new TableColumn<>("Summa");
         summaColumn.setCellValueFactory(cellData -> cellData.getValue().summaProperty());
 
-        TableColumn<Varaus, String> tuloColumn = new TableColumn<>("Tulopäivä");
+        TableColumn<Tausta, String> tuloColumn = new TableColumn<>("Tulopäivä");
         tuloColumn.setCellValueFactory(cellData -> cellData.getValue().saapumispvmProperty());
 
-        TableColumn<Varaus, String> lahtoColumn = new TableColumn<>("Lähtöpäivä");
+        TableColumn<Tausta, String> lahtoColumn = new TableColumn<>("Lähtöpäivä");
         lahtoColumn.setCellValueFactory(cellData -> cellData.getValue().lahtopvmProperty());
 
         table.getColumns().addAll(nameColumn, mailColumn, mokkiColumn, summaColumn, tuloColumn, lahtoColumn);
@@ -168,15 +168,15 @@ public class Taustaohjelma extends Application {
             tablePdf.addCell(new Cell().add(new Paragraph("Mökki")));
             tablePdf.addCell(new Cell().add(new Paragraph("Summa")));
 
-            List<Varaus> varaukset = table.getItems();
+            List<Tausta> varaukset = table.getItems();
 
-            for (Varaus varaus : varaukset) {
-                tablePdf.addCell(varaus.getNimi());
-                tablePdf.addCell(varaus.getSahkoposti());
-                tablePdf.addCell(varaus.getSaapumispvm().toString());
-                tablePdf.addCell(varaus.getLahtopvm().toString());
-                tablePdf.addCell(String.valueOf(varaus.getMokkiId()));
-                tablePdf.addCell(String.format("%.2f €", varaus.getSumma()));
+            for (Tausta tausta : varaukset) {
+                tablePdf.addCell(tausta.getNimi());
+                tablePdf.addCell(tausta.getSahkoposti());
+                tablePdf.addCell(tausta.getSaapumispvm().toString());
+                tablePdf.addCell(tausta.getLahtopvm().toString());
+                tablePdf.addCell(String.valueOf(tausta.getMokkiId()));
+                tablePdf.addCell(String.format("%.2f €", tausta.getSumma()));
             }
 
             document.add(tablePdf);
@@ -197,44 +197,44 @@ public class Taustaohjelma extends Application {
         String lahtopvmSearch = lahtopvmField.getValue().toString();
 
         // Suodatetaan alkuperäinen lista (data)
-        ObservableList<Varaus> filteredData = FXCollections.observableArrayList();
+        ObservableList<Tausta> filteredData = FXCollections.observableArrayList();
 
-        for (Varaus varaus : data) {
+        for (Tausta tausta : data) {
             boolean matches = true;
 
             // Suodata nimellä
-            if (!nimiSearch.isEmpty() && !varaus.getNimi().toLowerCase().contains(nimiSearch)) {
+            if (!nimiSearch.isEmpty() && !tausta.getNimi().toLowerCase().contains(nimiSearch)) {
                 matches = false;
             }
 
             // Suodata sähköpostilla
-            if (!sahkopostiSearch.isEmpty() && !varaus.getSahkoposti().toLowerCase().contains(sahkopostiSearch)) {
+            if (!sahkopostiSearch.isEmpty() && !tausta.getSahkoposti().toLowerCase().contains(sahkopostiSearch)) {
                 matches = false;
             }
 
             // Suodata mökin ID:llä
-            if (!mokkiSearch.isEmpty() && !String.valueOf(varaus.getMokkiId()).contains(mokkiSearch)) {
+            if (!mokkiSearch.isEmpty() && !String.valueOf(tausta.getMokkiId()).contains(mokkiSearch)) {
                 matches = false;
             }
 
             // Suodata summalla
-            if (!summaSearch.isEmpty() && varaus.getSumma() != Double.parseDouble(summaSearch)) {
+            if (!summaSearch.isEmpty() && tausta.getSumma() != Double.parseDouble(summaSearch)) {
                 matches = false;
             }
 
             // Suodata saapumispäivämäärällä
-            if (!saapumispvmSearch.isEmpty() && !varaus.getSaapumispvm().toString().contains(saapumispvmSearch)) {
+            if (!saapumispvmSearch.isEmpty() && !tausta.getSaapumispvm().toString().contains(saapumispvmSearch)) {
                 matches = false;
             }
 
             // Suodata lähtöpvm:llä
-            if (!lahtopvmSearch.isEmpty() && !varaus.getLahtopvm().toString().contains(lahtopvmSearch)) {
+            if (!lahtopvmSearch.isEmpty() && !tausta.getLahtopvm().toString().contains(lahtopvmSearch)) {
                 matches = false;
             }
 
             // Jos kaikki hakuehdot täyttyvät, lisätään varaus tuloksiin
             if (matches) {
-                filteredData.add(varaus);
+                filteredData.add(tausta);
             }
         }
         table.setItems(filteredData);
@@ -258,8 +258,8 @@ public class Taustaohjelma extends Application {
                 double summa = resultSet.getDouble("summa");
 
                 // Lisätään uusi varaus tietokannasta
-                Varaus varaus = new Varaus(nimi, sahkoposti, mokkiId, summa, saapumispvm, lahtopvm);
-                data.add(varaus);
+                Tausta tausta = new Tausta(nimi, sahkoposti, mokkiId, summa, saapumispvm, lahtopvm);
+                data.add(tausta);
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -6,7 +6,7 @@ CREATE TABLE varaus (
     sahkoposti VARCHAR(100),
     puhelin VARCHAR(20),
     henkilo_lkm INT,
-    mokki_id INT, 
+    mokki VARCHAR(100),
     lisa_sanky BOOLEAN,
     siivous BOOLEAN,
     myohainen_uloskirjautuminen BOOLEAN,
