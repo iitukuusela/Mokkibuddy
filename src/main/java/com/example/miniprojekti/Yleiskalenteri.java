@@ -4,8 +4,10 @@ import com.calendarfx.model.Entry;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -26,25 +28,31 @@ public class Yleiskalenteri extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        primaryStage.setScene(createScene());
+        primaryStage.setScene(createScene(primaryStage));
         primaryStage.setTitle("Yleiskalenteri");
         primaryStage.show();
     }
 
-    public Scene createScene() {
+    public Scene createScene(Stage primaryStage) {
 
         CalendarView calendarView = new CalendarView(); //luo alenterin näkymän
 
         //Paluu etusivulle -painike
-        /**Button btPaluu = new Button("Palaa etusivulle");
+        Button btPaluu = new Button("Palaa etusivulle");
          btPaluu.setOnAction(e -> {
          primaryStage.setScene(new Main().createScene(primaryStage));
-         });**/
+         });
 
         //hbox yläriville, jotta saadaan paluunappi sijoitettua, vaikka calendarFX on suht suljettu näkymä
-        HBox ylarivi = new HBox();
+        HBox ylarivi = new HBox(btPaluu);
         ylarivi.setPadding(new Insets(10));
-        //ylarivi.setAlignment(pos.CENTER);
+        ylarivi.setAlignment(Pos.CENTER_RIGHT);
+        ylarivi.setStyle("-fx-background-color: #f0f0f0;");
+
+        //borderpane, jotta saadaan nappi lisättyä kalenterinäkymään
+        BorderPane root = new BorderPane();
+        root.setTop(ylarivi);
+        root.setCenter(calendarView);
 
         //mökkien kalenterit
         Calendar yleinen = new Calendar("yleinen");
@@ -117,7 +125,7 @@ public class Yleiskalenteri extends Application {
         updateTimeThread.setDaemon(true);
         updateTimeThread.start();
 
-        Scene scene = new Scene(calendarView);
+        Scene scene = new Scene(root, 1000, 700);
         return scene;
 
 

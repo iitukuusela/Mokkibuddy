@@ -51,7 +51,7 @@ public class Main extends Application {
 
         btyleiskalenteri.setOnAction(e -> {
             Yleiskalenteri yleiskalenteri = new Yleiskalenteri();
-            primaryStage.setScene(yleiskalenteri.createScene());
+            primaryStage.setScene(yleiskalenteri.createScene(primaryStage));
         });
 
         btvarauskalenteri.setOnAction(e -> {
