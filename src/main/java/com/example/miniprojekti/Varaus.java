@@ -81,16 +81,16 @@ public void setId(int id) { this.id.set(id); }
 public void setNimi(String nimi) { this.nimi.set(nimi); }
 public void setSahkoposti(String sahkoposti) { this.sahkoposti.set(sahkoposti); }
 public void setPuhelin(String puhelin) { this.puhelin.set(puhelin); }
-public void getHenkiloLkm(int henkiloLkm) { this.henkiloLkm.set(henkiloLkm); }
+public void setHenkiloLkm(int henkiloLkm) { this.henkiloLkm.set(henkiloLkm); }
 public void setMokkiId(int mokkiId) { this.mokkiId.set(mokkiId); }
 public void setLisaSanky(boolean lisaSanky) { this.lisaSanky.set(lisaSanky); }
 public void setSiivous(boolean siivous) { this.siivous.set(siivous); }
-public void isMyohainenUloskirjautuminen(boolean myohainenUloskirjautuminen) { this.myohainenUloskirjautuminen.set(myohainenUloskirjautuminen); }
+public void setMyohainenUloskirjautuminen(boolean myohainenUloskirjautuminen) { this.myohainenUloskirjautuminen.set(myohainenUloskirjautuminen); }
 public void setSumma(double summa) { this.summa.set(summa); }
-public void getKorttiNumero(String korttiNumero) { this.korttiNumero.set(korttiNumero); }
-public void getVoimassaoloaika(String voimassaoloaika) { this.voimassaoloaika.set(voimassaoloaika); }
-public void getTurvakoodi(String turvakoodi) { this.turvakoodi.set(turvakoodi); }
-public void getSaapumispvm(LocalDate saapumispvm) { this.saapumispvm.set(String.valueOf(saapumispvm)); }
+public void setKorttiNumero(String korttiNumero) { this.korttiNumero.set(korttiNumero); }
+public void setVoimassaoloaika(String voimassaoloaika) { this.voimassaoloaika.set(voimassaoloaika); }
+public void setTurvakoodi(String turvakoodi) { this.turvakoodi.set(turvakoodi); }
+public void setSaapumispvm(LocalDate saapumispvm) { this.saapumispvm.set(String.valueOf(saapumispvm)); }
 public void setLahtopvm(LocalDate lahtopvm) { this.lahtopvm.set(String.valueOf(lahtopvm)); }
 
 public IntegerProperty idProperty() { return id; }
