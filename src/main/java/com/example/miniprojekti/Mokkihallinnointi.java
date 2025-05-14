@@ -21,21 +21,15 @@ public class Mokkihallinnointi extends Application {
     public TableView<Mokki> table;
     public ObservableList<Mokki> data;
 
+    public String url = "jdbc:mysql://localhost:3306/mokkidb";
+    public String user = "root";
+    public String password = "HirttoKoysi150!";
+
     @Override
     public void start(Stage primaryStage) {
-
-        Scene mokkihallinnointiScene = createScene(primaryStage);
-        primaryStage.setScene(mokkihallinnointiScene);
-        primaryStage.setTitle("Mökkihallinnointi");
+        primaryStage.setScene(createScene(primaryStage));
+        primaryStage.setTitle("Mokkihallinnointi");
         primaryStage.show();
-
-        //tähän paluubutton oikeeseen yläkulmaan mainin buttonin ohjeiden mukaan
-        Button btPaluu = new Button("Paluu etusivulle");
-        btPaluu.setOnAction(e -> {
-            primaryStage.setScene(new Main().createScene(primaryStage));
-        });
-
-
     }
 
     public Scene createScene(Stage primaryStage) {
@@ -128,14 +122,9 @@ public class Mokkihallinnointi extends Application {
             }
         });
 
-        //Paluu etusivulle -painike
-        Button btPaluu = new Button("Palaa etusivulle");
-        btPaluu.setOnAction(e -> {
-            primaryStage.setScene(new Main().createScene(primaryStage));
-        });
+        //Button
 
-
-        HBox hbox = new HBox(10, addButton, deleteButton, editButton, btPaluu);
+        HBox hbox = new HBox(10, addButton, deleteButton, editButton);
 
         VBox vBox = new VBox(5, capacityField, distanceField, saunaBox, hotTubBox, priceField, hbox, table);
         Scene scene = new Scene(vBox, 400, 600);
@@ -147,10 +136,6 @@ public class Mokkihallinnointi extends Application {
     }
 
     public void loadMokitFromDatabase() {
-
-        String url = "jdbc:mysql://localhost:3306/mokkidb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
@@ -177,10 +162,6 @@ public class Mokkihallinnointi extends Application {
 
     public void addMokkiToDatabase(Mokki mokki) {
 
-        String url = "jdbc:mysql://localhost:3306/mokkidb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
-
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
             String sql = "INSERT INTO mokki (henkilo_maara, etaisyys, sauna, poreamme, hinta_per_yo) VALUES (?, ?, ?, ?, ?)";
@@ -198,10 +179,6 @@ public class Mokkihallinnointi extends Application {
 
     public void deleteMokkiFromDatabase(int id) {
 
-        String url = "jdbc:mysql://localhost:3306/mokkidb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
-
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
             String sql = "delete from mokki where id = ?";
@@ -214,10 +191,6 @@ public class Mokkihallinnointi extends Application {
     }
 
     public void updateMokkiInDatabase(Mokki mokki) {
-
-        String url = "jdbc:mysql://localhost:3306/mokkidb";
-        String user = "root";
-        String password = "HirttoKoysi150!";
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
