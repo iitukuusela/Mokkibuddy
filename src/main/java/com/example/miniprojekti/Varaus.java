@@ -41,7 +41,10 @@ public class Varaus {
         this.lahtopvm = new SimpleObjectProperty<>(lahtopvm);  // **Muokattu: LocalDate**
     }
 
-    public Varaus(String nimi, String sahkoposti, String puhelin, int henkiloLkm, String mokki, boolean lisaSanky, boolean siivous, boolean myohainenUloskirjautuminen, double summa, String korttiNumero, String voimassaoloaika, String turvakoodi, LocalDate saapumispvm, LocalDate lahtopvm) {
+    public Varaus(String nimi, String sahkoposti, String puhelin, int henkiloLkm, String mokki,
+                  boolean lisaSanky, boolean siivous, boolean myohainenUloskirjautuminen, boolean cleaning,
+                  double summa, String korttiNumero, String voimassaoloaika, String turvakoodi,
+                  LocalDate saapumispvm, LocalDate lahtopvm) {
         this.id = new SimpleIntegerProperty(0);
         this.nimi = new SimpleStringProperty(nimi);
         this.sahkoposti = new SimpleStringProperty(sahkoposti);
