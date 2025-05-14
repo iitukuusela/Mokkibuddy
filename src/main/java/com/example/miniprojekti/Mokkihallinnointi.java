@@ -42,6 +42,9 @@ public class Mokkihallinnointi extends Application {
         //TableColumn<Mokki, Number> idColumn = new TableColumn<>("ID");
         //idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
 
+        TableColumn<Mokki, String> nameColumn = new TableColumn<>("Mökin nimi");
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nimiProperty());
+
         TableColumn<Mokki, String> capacityColumn = new TableColumn<>("Henkilömäärä");
         capacityColumn.setCellValueFactory(cellData -> cellData.getValue().henkiloMaaraProperty());
 
@@ -61,6 +64,10 @@ public class Mokkihallinnointi extends Application {
         table.getColumns().addAll(capacityColumn, distanceColumn, saunaColumn, hotTubColumn, priceColumn);
 
         //Lomake mökin lisäämiseen
+        TextField nameField = new TextField();
+        nameField.setPromptText("Mökin nimi");
+        nameField.setMaxWidth(200);
+
         TextField capacityField = new TextField();
         capacityField.setPromptText("Henkilömäärä");
         capacityField.setMaxWidth(200);
@@ -122,11 +129,17 @@ public class Mokkihallinnointi extends Application {
             }
         });
 
+        //Paluu etusivulle -painike
+        Button btPaluu = new Button("Palaa etusivulle");
+        btPaluu.setOnAction(e -> {
+            primaryStage.setScene(new Main().createScene(primaryStage));
+        });
+
         //Button
 
-        HBox hbox = new HBox(10, addButton, deleteButton, editButton);
+        HBox hbox = new HBox(10, addButton, deleteButton, editButton, btPaluu);
 
-        VBox vBox = new VBox(5, capacityField, distanceField, saunaBox, hotTubBox, priceField, hbox, table);
+        VBox vBox = new VBox(5, nameField, capacityField, distanceField, saunaBox, hotTubBox, priceField, hbox, table);
         Scene scene = new Scene(vBox, 400, 600);
 
         //Lisää esimerkkimökit
