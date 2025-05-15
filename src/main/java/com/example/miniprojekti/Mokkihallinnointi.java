@@ -25,6 +25,9 @@ public class Mokkihallinnointi extends Application {
     public String user = "root";
     public String password = "HirttoKoysi150!";
 
+    public TextField nameField, capacityField, distanceField, priceField;
+    public ComboBox<String> saunaBox, hotTubBox;
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setScene(createScene(primaryStage));
@@ -64,19 +67,19 @@ public class Mokkihallinnointi extends Application {
         table.getColumns().addAll(capacityColumn, distanceColumn, saunaColumn, hotTubColumn, priceColumn);
 
         //Lomake mökin lisäämiseen
-        TextField nameField = new TextField();
+        nameField = new TextField();
         nameField.setPromptText("Mökin nimi");
         nameField.setMaxWidth(200);
 
-        TextField capacityField = new TextField();
+        capacityField = new TextField();
         capacityField.setPromptText("Henkilömäärä");
         capacityField.setMaxWidth(200);
 
-        TextField distanceField = new TextField();
+        distanceField = new TextField();
         distanceField.setPromptText("Etäisyys km");
         distanceField.setMaxWidth(200);
 
-        ComboBox<String> saunaBox = new ComboBox<>();
+        saunaBox = new ComboBox<>();
         saunaBox.getItems().addAll("Kyllä", "Ei");
         saunaBox.setPromptText("Sauna");
         saunaBox.setMaxWidth(200);
@@ -85,7 +88,7 @@ public class Mokkihallinnointi extends Application {
         //saunaField.setPromptText("Sauna");
         //saunaField.setMaxWidth(200);
 
-        ComboBox<String> hotTubBox = new ComboBox<>();
+        hotTubBox = new ComboBox<>();
         hotTubBox.getItems().addAll("Kyllä", "Ei");
         hotTubBox.setPromptText("Poreamme");
         hotTubBox.setMaxWidth(200);
@@ -94,7 +97,7 @@ public class Mokkihallinnointi extends Application {
         //hotTubField.setPromptText("Poreamme");
         //hotTubField.setMaxWidth(200);
 
-        TextField priceField = new TextField();
+        priceField = new TextField();
         priceField.setPromptText("Hinta per yö");
         priceField.setMaxWidth(200);
 
@@ -138,7 +141,7 @@ public class Mokkihallinnointi extends Application {
         HBox hbox = new HBox(10, addButton, deleteButton, editButton, btPaluu);
 
         VBox vBox = new VBox(5, nameField, capacityField, distanceField, saunaBox, hotTubBox, priceField, hbox, table);
-        Scene scene = new Scene(vBox, 400, 600);
+        Scene scene = new Scene(vBox, 500, 600);
 
         //Lisää esimerkkimökit
         loadMokitFromDatabase();

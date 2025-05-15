@@ -10,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.control.ComboBox;
 
 import java.sql.*;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 
 
@@ -22,9 +23,9 @@ public class Varauskalenteri extends Application {
     public String user = "root";
     public String password = "HirttoKoysi150!";
 
-    private TextField nameField, emailField, phoneField, peopleField, mokkiField, summaField, korttiNumeroField, voimassaoloaikaField, turvakoodiField;
-    private ComboBox<String> lisaSankyBox, cleaningBox, lateCOBox;
-    private DatePicker saapumispvmField, lahtopvmField;
+    public TextField nameField, emailField, phoneField, peopleField, mokkiField, priceField, cardNumberField, validityField, securityField;
+    public ComboBox<String> lisaSankyBox, cleaningBox, lateCOBox;
+    public DatePicker startDatePicker, endDatePicker;
 
     public static void main(String[] args) { launch(args); }
 
@@ -102,33 +103,33 @@ public class Varauskalenteri extends Application {
         );
 
         //Lomake varauksen lisäämiseen
-        TextField nameField = new TextField();
-        nameField.setPromptText("Varaajan nimi");
-        nameField.setMaxWidth(150);
+        this.nameField = new TextField();
+        this.nameField.setPromptText("Varaajan nimi");
+        this.nameField.setMaxWidth(150);
 
-        TextField emailField = new TextField();
-        emailField.setPromptText("Sähköposti");
-        emailField.setMaxWidth(150);
+        this.emailField = new TextField();
+        this.emailField.setPromptText("Sähköposti");
+        this.emailField.setMaxWidth(150);
 
-        TextField phoneField = new TextField();
-        phoneField.setPromptText("Puhelinnumero");
-        phoneField.setMaxWidth(150);
+        this.phoneField = new TextField();
+        this.phoneField.setPromptText("Puhelinnumero");
+        this.phoneField.setMaxWidth(150);
 
-        TextField peopleField = new TextField();
-        peopleField.setPromptText("Henkilömäärä");
-        peopleField.setMaxWidth(150);
+        this.peopleField = new TextField();
+        this.peopleField.setPromptText("Henkilömäärä");
+        this.peopleField.setMaxWidth(150);
 
         HBox peopleBox = new HBox(5);
         peopleBox.getChildren().addAll(nameField, emailField, phoneField, peopleField);
 
-        TextField mokkiField = new TextField();
-        mokkiField.setPromptText("Varattu mökki");
-        mokkiField.setMaxWidth(150);
+        this.mokkiField = new TextField();
+        this.mokkiField.setPromptText("Varattu mökki");
+        this.mokkiField.setMaxWidth(150);
 
-        ComboBox<String> lisaSankyBox = new ComboBox<>();
-        lisaSankyBox.getItems().addAll("Kyllä", "Ei");
-        lisaSankyBox.setPromptText("Lisäsängyn tarve");
-        lisaSankyBox.setMaxWidth(150);
+        this.lisaSankyBox = new ComboBox<>();
+        this.lisaSankyBox.getItems().addAll("Kyllä", "Ei");
+        this.lisaSankyBox.setPromptText("Lisäsängyn tarve");
+        this.lisaSankyBox.setMaxWidth(150);
 
         //TextField lisaSankyField = new TextField();
         //lisaSankyField.setPromptText("Lisäsängyn tarve");
@@ -138,38 +139,38 @@ public class Varauskalenteri extends Application {
         //cleaningField.setPromptText("Siivouspalvelu");
         //cleaningField.setMaxWidth(150);
 
-        ComboBox<String> cleaningBox = new ComboBox<>();
-        cleaningBox.getItems().addAll("Kyllä", "Ei");
-        cleaningBox.setPromptText("Siivouspalvelu");
-        cleaningBox.setMaxWidth(150);
+        this.cleaningBox = new ComboBox<>();
+        this.cleaningBox.getItems().addAll("Kyllä", "Ei");
+        this.cleaningBox.setPromptText("Siivouspalvelu");
+        this.cleaningBox.setMaxWidth(150);
 
         //TextField lateCOField = new TextField();
         //lateCOField.setPromptText("Myöhäinen uloskirjautuminen");
         //lateCOField.setMaxWidth(150);
 
-        ComboBox<String> lateCOBox = new ComboBox<>();
-        lateCOBox.getItems().addAll("Kyllä", "Ei");
-        lateCOBox.setPromptText("Myöhäinen uloskirjautuminen");
-        lateCOBox.setMaxWidth(250);
+        this.lateCOBox = new ComboBox<>();
+        this.lateCOBox.getItems().addAll("Kyllä", "Ei");
+        this.lateCOBox.setPromptText("Myöhäinen uloskirjautuminen");
+        this.lateCOBox.setMaxWidth(250);
 
         HBox mokkiBox = new HBox(5);
         mokkiBox.getChildren().addAll(mokkiField, lisaSankyBox, cleaningBox, lateCOBox);
 
-        TextField priceField = new TextField();
-        priceField.setPromptText("Summa");
-        priceField.setMaxWidth(150);
+        this.priceField = new TextField();
+        this.priceField.setPromptText("Summa");
+        this.priceField.setMaxWidth(150);
 
-        TextField cardNumberField = new TextField();
-        cardNumberField.setPromptText("Kortin numero");
-        cardNumberField.setMaxWidth(150);
+        this.cardNumberField = new TextField();
+        this.cardNumberField.setPromptText("Kortin numero");
+        this.cardNumberField.setMaxWidth(150);
 
-        TextField validityField = new TextField();
-        validityField.setPromptText("Voimassaoloaika");
-        validityField.setMaxWidth(150);
+        this.validityField = new TextField();
+        this.validityField.setPromptText("Voimassaoloaika");
+        this.validityField.setMaxWidth(150);
 
-        TextField securityField = new TextField();
-        securityField.setPromptText("Turvanumero");
-        securityField.setMaxWidth(150);
+        this.securityField = new TextField();
+        this.securityField.setPromptText("Turvanumero");
+        this.securityField.setMaxWidth(150);
 
         HBox priceInfoBox = new HBox(5);
         priceInfoBox.getChildren().addAll(priceField, cardNumberField, validityField, securityField);
@@ -178,8 +179,8 @@ public class Varauskalenteri extends Application {
         infoVBoxs.getChildren().addAll(peopleBox, mokkiBox, priceInfoBox);
 
         //Loppu ja alkupäivät
-        DatePicker startDatePicker = new DatePicker();
-        DatePicker endDatePicker = new DatePicker();
+        this.startDatePicker = new DatePicker();
+        this.endDatePicker = new DatePicker();
 
         Label startDateLabel = new Label("Saapumispäivä:");
         Label endDateLabel = new Label("Lähtöpäivä:");
@@ -200,25 +201,37 @@ public class Varauskalenteri extends Application {
         Button addButton = new Button("Lisää varaus");
         addButton.setOnAction(e -> {
             try {
+                int henkiloLkm = 0;
+                if (!peopleField.getText().trim().isEmpty()) {
+                    henkiloLkm = Integer.parseInt(peopleField.getText().trim());
+                }
+
+                double summa = 0.0;
+                if (!priceField.getText().trim().isEmpty()) {
+                    summa = Double.parseDouble(priceField.getText().trim());
+                }
+
                 Varaus varaus = new Varaus(
-                        nameField.getText(),
-                        emailField.getText(),
-                        phoneField.getText(),
-                        Integer.parseInt(peopleField.getText()),
-                        mokkiField.getText(),
-                        lisaSankyBox.getValue().equals("Kyllä"),
-                        cleaningBox.getValue().equals("Kyllä"),
-                        lateCOBox.getValue().equals("Kyllä"),
-                        Double.parseDouble(priceField.getText()),
-                        cardNumberField.getText(),
-                        validityField.getText(),
-                        securityField.getText(),
+                        nameField.getText().trim(),
+                        emailField.getText().trim(),
+                        phoneField.getText().trim(),
+                        henkiloLkm,
+                        mokkiField.getText().trim(),
+                        "Kyllä".equals(lisaSankyBox.getValue()),
+                        "Kyllä".equals(cleaningBox.getValue()),
+                        "Kyllä".equals(lateCOBox.getValue()),
+                        summa,
+                        cardNumberField.getText().trim(),
+                        validityField.getText().trim(),
+                        securityField.getText().trim(),
                         startDatePicker.getValue(),
                         endDatePicker.getValue()
                 );
 
                 addVarausToDatabase(varaus);
                 loadVarausFromDatabase();
+            } catch (NumberFormatException ex) {
+                System.out.println("Virheellinen numeroarvo (henkilömäärä tai summa).");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -228,8 +241,11 @@ public class Varauskalenteri extends Application {
         deleteButton.setOnAction(e -> {
             Varaus selectedVaraus = table.getSelectionModel().getSelectedItem();
             if (selectedVaraus != null) {
+                System.out.println("Poistettava varaus id: " + selectedVaraus.getId());
                 deleteVarausFromDatabase(selectedVaraus.getId());
                 data.remove(selectedVaraus);
+            } else {
+                System.out.println("Ei valittua varausta poistettavaksi.");
             }
         });
 
@@ -284,115 +300,126 @@ public class Varauskalenteri extends Application {
     }
 
     private void etsiVaraus() {
+        String nimiSearch = (nameField.getText() != null) ? nameField.getText().toLowerCase() : "";
+        String sahkopostiSearch = (emailField.getText() != null) ? emailField.getText().toLowerCase() : "";
+        String puhelinSearch = (phoneField.getText() != null) ? phoneField.getText().toLowerCase() : "";
+        String peopleSearch = (peopleField.getText() != null) ? peopleField.getText() : "";
+        String mokkiSearch = (mokkiField.getText() != null) ? mokkiField.getText().toLowerCase() : "";
+        String lisaSankySearch = (lisaSankyBox.getValue() != null) ? lisaSankyBox.getValue() : "";
+        String siivousSearch = (cleaningBox.getValue() != null) ? cleaningBox.getValue() : "";
+        String lateCOSearch = (lateCOBox.getValue() != null) ? lateCOBox.getValue() : "";
+        String summaSearch = (priceField.getText() != null) ? priceField.getText() : "";
+        String korttiNumeroSearch = (cardNumberField.getText() != null) ? cardNumberField.getText() : "";
+        String voimassaoloaikaSearch = (validityField.getText() != null) ? validityField.getText() : "";
+        String turvakoodiSearch = (securityField.getText() != null) ? securityField.getText() : "";
+        String saapumispvmSearch = (startDatePicker.getValue() != null) ? startDatePicker.getValue().toString() : "";
+        String lahtopvmSearch = (endDatePicker.getValue() != null) ? endDatePicker.getValue().toString() : "";
 
-        String nimiSearch = nameField.getText().toLowerCase();
-        String sahkopostiSearch = emailField.getText().toLowerCase();
-        String puhelinSearch = phoneField.getText().toLowerCase();
-        String peopleSearch = peopleField.getText();
-        String mokkiSearch = mokkiField.getText().toLowerCase();
-        String lisaSankySearch = lisaSankyBox.getValue();
-        String siivousSearch = cleaningBox.getValue();
-        String lateCOSearch = lateCOBox.getValue();
-        String summaSearch = summaField.getText();
-        String korttiNumeroSearch = korttiNumeroField.getText();
-        String voimassaoloaikaSearch = voimassaoloaikaField.getText();
-        String turvakoodiSearch = turvakoodiField.getText();
-        String saapumispvmSearch = saapumispvmField.getValue().toString();
-        String lahtopvmSearch = lahtopvmField.getValue().toString();
-
-        // Suodatetaan alkuperäinen lista (data)
         ObservableList<Varaus> filteredData = FXCollections.observableArrayList();
 
         for (Varaus varaus : data) {
             boolean matches = true;
 
-            // Suodata nimellä
-            if (!nimiSearch.isEmpty() && !varaus.getNimi().toLowerCase().contains(nimiSearch)) {
+            if (!nimiSearch.isEmpty() && (varaus.getNimi() == null || !varaus.getNimi().toLowerCase().contains(nimiSearch))) {
                 matches = false;
             }
 
-            // Suodata sähköpostilla
-            if (!sahkopostiSearch.isEmpty() && !varaus.getSahkoposti().toLowerCase().contains(sahkopostiSearch)) {
+            if (!sahkopostiSearch.isEmpty() && (varaus.getSahkoposti() == null || !varaus.getSahkoposti().toLowerCase().contains(sahkopostiSearch))) {
                 matches = false;
             }
 
-            // Suodata puhelimella
-            if (!puhelinSearch.isEmpty() && !varaus.getPuhelin().toLowerCase().contains(puhelinSearch)) {
+            if (!puhelinSearch.isEmpty() && (varaus.getPuhelin() == null || !varaus.getPuhelin().toLowerCase().contains(puhelinSearch))) {
                 matches = false;
             }
 
-            // Suodata henkilömäärällä
-            if (!peopleSearch.isEmpty() && !String.valueOf(varaus.getHenkiloLkm()).contains(peopleSearch)) {
+            if (!peopleSearch.isEmpty()) {
+                try {
+                    int henkiloLkmSearch = Integer.parseInt(peopleSearch);
+                    if (varaus.getHenkiloLkm() != henkiloLkmSearch) {
+                        matches = false;
+                    }
+                } catch (NumberFormatException ex) {
+                    matches = false;
+                }
+            }
+
+            if (!mokkiSearch.isEmpty() && (varaus.getMokki() == null || !varaus.getMokki().toLowerCase().contains(mokkiSearch))) {
                 matches = false;
             }
 
-            // Suodata mökin ID:llä
-            if (!mokkiSearch.isEmpty() && !String.valueOf(varaus.getMokki()).contains(mokkiSearch)) {
+            if (!lisaSankySearch.isEmpty()) {
+                boolean lisaSankyBool = "Kyllä".equalsIgnoreCase(lisaSankySearch);
+                if (varaus.isLisaSanky() != lisaSankyBool) {
+                    matches = false;
+                }
+            }
+
+            if (!siivousSearch.isEmpty()) {
+                boolean siivousBool = "Kyllä".equalsIgnoreCase(siivousSearch);
+                if (varaus.isSiivous() != siivousBool) {
+                    matches = false;
+                }
+            }
+
+            if (!lateCOSearch.isEmpty()) {
+                boolean lateCOBool = "Kyllä".equalsIgnoreCase(lateCOSearch);
+                if (varaus.isMyohainenUloskirjautuminen() != lateCOBool) {
+                    matches = false;
+                }
+            }
+
+            if (!summaSearch.isEmpty()) {
+                try {
+                    double summaDouble = Double.parseDouble(summaSearch);
+                    if (Double.compare(varaus.getSumma(), summaDouble) != 0) {
+                        matches = false;
+                    }
+                } catch (NumberFormatException ex) {
+                    matches = false;
+                }
+            }
+
+            if (!korttiNumeroSearch.isEmpty() && (varaus.getKorttiNumero() == null || !varaus.getKorttiNumero().contains(korttiNumeroSearch))) {
                 matches = false;
             }
 
-            // Suodata lisäsängyn tarpeella
-            if (lisaSankySearch != null && !lisaSankySearch.isEmpty() && varaus.isLisaSanky() != Boolean.parseBoolean(lisaSankySearch)) {
+            if (!voimassaoloaikaSearch.isEmpty() && (varaus.getVoimassaoloaika() == null || !varaus.getVoimassaoloaika().contains(voimassaoloaikaSearch))) {
                 matches = false;
             }
 
-            // Suodata siivouspalvelulla
-            if (siivousSearch != null && !siivousSearch.isEmpty() && varaus.isSiivous() != Boolean.parseBoolean(siivousSearch)) {
+            if (!turvakoodiSearch.isEmpty() && (varaus.getTurvakoodi() == null || !varaus.getTurvakoodi().contains(turvakoodiSearch))) {
                 matches = false;
             }
 
-            // Suodata myöhäisellä uloskirjautumisella
-            if (lateCOSearch != null && !lateCOSearch.isEmpty() && varaus.isMyohainenUloskirjautuminen() != Boolean.parseBoolean(lateCOSearch)) {
-                matches = false;
+            if (!saapumispvmSearch.isEmpty()) {
+                if (varaus.getSaapumispvm() == null || !varaus.getSaapumispvm().toString().contains(saapumispvmSearch)) {
+                    matches = false;
+                }
             }
 
-            // Suodata summalla
-            if (!summaSearch.isEmpty() && varaus.getSumma() != Double.parseDouble(summaSearch)) {
-                matches = false;
+            if (!lahtopvmSearch.isEmpty()) {
+                if (varaus.getLahtopvm() == null || !varaus.getLahtopvm().toString().contains(lahtopvmSearch)) {
+                    matches = false;
+                }
             }
 
-            // Suodata korttinumeroilla
-            if (!korttiNumeroSearch.isEmpty() && !varaus.getKorttiNumero().contains(korttiNumeroSearch)) {
-                matches = false;
-            }
-
-            // Suodata voimassaoloajalla
-            if (!voimassaoloaikaSearch.isEmpty() && !varaus.getVoimassaoloaika().contains(voimassaoloaikaSearch)) {
-                matches = false;
-            }
-
-            // Suodata turvakoodilla
-            if (!turvakoodiSearch.isEmpty() && !varaus.getTurvakoodi().contains(turvakoodiSearch)) {
-                matches = false;
-            }
-
-            // Suodata saapumispäivämäärällä
-            if (!saapumispvmSearch.isEmpty() && !varaus.getSaapumispvm().toString().contains(saapumispvmSearch)) {
-                matches = false;
-            }
-
-            // Suodata lähtöpvm:llä
-            if (!lahtopvmSearch.isEmpty() && !varaus.getLahtopvm().toString().contains(lahtopvmSearch)) {
-                matches = false;
-            }
-
-            // Jos kaikki hakuehdot täyttyvät, lisätään varaus tuloksiin
             if (matches) {
                 filteredData.add(varaus);
             }
         }
+
         table.setItems(filteredData);
     }
 
     public void loadVarausFromDatabase() {
+        data.clear();
 
-        try {
-            Connection connection = DriverManager.getConnection(url, user, password);
-            String sql = "select * from varaus";
-            PreparedStatement statment = connection.prepareStatement(sql);
-            ResultSet resultSet = statment.executeQuery();
+        String sql = "SELECT * FROM varaus";
 
-            data.clear();
+        try (Connection connection = DriverManager.getConnection(url, user, password);
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String nimi = resultSet.getString("nimi");
@@ -420,14 +447,68 @@ public class Varauskalenteri extends Application {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        table.setItems(data);  // Päivitä TableView UI
     }
 
+    /*
     public void addVarausToDatabase(Varaus varaus) {
-        try {
-            Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String sql = "INSERT INTO varaus (nimi, sahkoposti, puhelin, henkilo_lkm, mokki, lisa_sanky, siivous, myohainen_uloskirjautuminen, summa, kortti_numero, voimassaoloaika, turvakoodi, saapumispvm, lahtopaivamaara) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
+
+            // Stringit
+            statement.setString(1, isNullOrEmpty(varaus.getNimi()) ? null : varaus.getNimi());
+            statement.setString(2, isNullOrEmpty(varaus.getSahkoposti()) ? null : varaus.getSahkoposti());
+            statement.setString(3, isNullOrEmpty(varaus.getPuhelin()) ? null : varaus.getPuhelin());
+
+            // int
+            statement.setInt(4, varaus.getHenkiloLkm()); // oletetaan että on aina annettu
+            statement.setString(5, isNullOrEmpty(varaus.getMokki()) ? null : varaus.getMokki());
+
+            // boolean (ei voi olla null, käytä false oletuksena)
+            statement.setBoolean(6, varaus.isLisaSanky());
+            statement.setBoolean(7, varaus.isSiivous());
+            statement.setBoolean(8, varaus.isMyohainenUloskirjautuminen());
+
+            // Double – tarkista jos nolla/tyhjä -> setNull
+            if (varaus.getSumma() == 0.0) {
+                statement.setNull(9, java.sql.Types.DOUBLE);
+            } else {
+                statement.setDouble(9, varaus.getSumma());
+            }
+
+            statement.setString(10, isNullOrEmpty(varaus.getKorttiNumero()) ? null : varaus.getKorttiNumero());
+            statement.setString(11, isNullOrEmpty(varaus.getVoimassaoloaika()) ? null : varaus.getVoimassaoloaika());
+            statement.setString(12, isNullOrEmpty(varaus.getTurvakoodi()) ? null : varaus.getTurvakoodi());
+
+            if (varaus.getSaapumispvm() == null) {
+                statement.setNull(13, java.sql.Types.DATE);
+            } else {
+                statement.setDate(13, java.sql.Date.valueOf(varaus.getSaapumispvm()));
+            }
+
+            if (varaus.getLahtopvm() == null) {
+                statement.setNull(14, java.sql.Types.DATE);
+            } else {
+                statement.setDate(14, java.sql.Date.valueOf(varaus.getLahtopvm()));
+            }
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+*/
+
+    public void addVarausToDatabase(Varaus varaus) {
+        String sql = "INSERT INTO varaus (nimi, sahkoposti, puhelin, henkilo_lkm, mokki, lisa_sanky, siivous, myohainen_uloskirjautuminen, summa, kortti_numero, voimassaoloaika, turvakoodi, saapumispvm, lahtopaivamaara) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(url, user, password);
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             statement.setString(1, varaus.getNimi());
             statement.setString(2, varaus.getSahkoposti());
             statement.setString(3, varaus.getPuhelin());
@@ -440,23 +521,40 @@ public class Varauskalenteri extends Application {
             statement.setString(10, varaus.getKorttiNumero());
             statement.setString(11, varaus.getVoimassaoloaika());
             statement.setString(12, varaus.getTurvakoodi());
-            statement.setDate(13, Date.valueOf(varaus.getSaapumispvm()));
-            statement.setDate(14, Date.valueOf(varaus.getLahtopvm()));
+            statement.setDate(13, java.sql.Date.valueOf(varaus.getSaapumispvm()));
+            statement.setDate(14, java.sql.Date.valueOf(varaus.getLahtopvm()));
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Varauksen lisääminen epäonnistui, ei rivejä lisätty.");
+            }
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    varaus.setId(generatedKeys.getInt(1));  // TÄRKEÄ: asetetaan id varaukselle!
+                } else {
+                    throw new SQLException("Varauksen ID:n luonti epäonnistui.");
+                }
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void deleteVarausFromDatabase(int id) {
 
-        try {
-            Connection connection = DriverManager.getConnection(url, user, password);
-            String sql ="DELETE FROM varaus WHERE id = ?";
-            PreparedStatement statment = connection.prepareStatement(sql);
-            statment.setInt(1, id);
-            statment.executeUpdate();
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
+    public void deleteVarausFromDatabase(int id) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String sql = "DELETE FROM varaus WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            int rowsAffected = statement.executeUpdate();
+            System.out.println("Deleted rows: " + rowsAffected);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -531,7 +629,7 @@ public class Varauskalenteri extends Application {
                         lahtopvm
                 );
 
-                addVarausToDatabase(varaus);
+                //addVarausToDatabase(varaus);
             }
 
             loadVarausFromDatabase();
