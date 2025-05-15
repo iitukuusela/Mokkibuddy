@@ -629,7 +629,7 @@ public class Varauskalenteri extends Application {
                         lahtopvm
                 );
 
-                //addVarausToDatabase(varaus);
+                addVarausToDatabase(varaus);
             }
 
             loadVarausFromDatabase();
