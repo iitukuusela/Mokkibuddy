@@ -29,9 +29,8 @@ public class Taustaohjelma extends Application {
     public String user = "root";
     public String password = "HirttoKoysi150!";
 
-    private TextField nameField, emailField, phoneField, peopleField, mokkiField, summaField, korttiNumeroField, voimassaoloaikaField, turvakoodiField;
-    private ComboBox<String> lisaSankyBox, cleaningBox, lateCOBox;
-    private DatePicker saapumispvmField, lahtopvmField;
+    public TextField nimiField, spostiField, mokkifField, priceField;
+    public DatePicker tuloPicker, lahtoPicker;
 
     public static void main(String[] args) {
         launch(args);
@@ -57,7 +56,7 @@ public class Taustaohjelma extends Application {
         TableColumn<Tausta, String> mailColumn = new TableColumn<>("Sähköposti");
         mailColumn.setCellValueFactory(cellData -> cellData.getValue().sahkopostiProperty());
 
-        TableColumn<Tausta, Number> mokkiColumn = new TableColumn<>("Mökki");
+        TableColumn<Tausta, String> mokkiColumn = new TableColumn<>("Mökki");
         mokkiColumn.setCellValueFactory(cellData -> cellData.getValue().mokkiIdProperty());
 
         TableColumn<Tausta, Number> summaColumn = new TableColumn<>("Summa");
@@ -72,27 +71,27 @@ public class Taustaohjelma extends Application {
         table.getColumns().addAll(nameColumn, mailColumn, mokkiColumn, summaColumn, tuloColumn, lahtoColumn);
 
         //Lomake varauksen lisäämiseen
-        TextField nameField = new TextField();
-        nameField.setPromptText("Varaajan nimi");
-        nameField.setMaxWidth(150);
+        nimiField = new TextField();
+        nimiField.setPromptText("Varaajan nimi");
+        nimiField.setMaxWidth(150);
 
-        TextField emailField = new TextField();
-        emailField.setPromptText("Sähköposti");
-        emailField.setMaxWidth(150);
+        spostiField = new TextField();
+        spostiField.setPromptText("Sähköposti");
+        spostiField.setMaxWidth(150);
 
         HBox tiedotBox = new HBox(5);
-        tiedotBox.getChildren().addAll(nameField, emailField);
+        tiedotBox.getChildren().addAll(nimiField, spostiField);
 
-        TextField mokkiField = new TextField();
-        mokkiField.setPromptText("Mökki");
-        mokkiField.setMaxWidth(150);
+        mokkifField = new TextField();
+        mokkifField.setPromptText("Mökki");
+        mokkifField.setMaxWidth(150);
 
-        TextField priceField = new TextField();
+        priceField = new TextField();
         priceField.setPromptText("Summa");
         priceField.setMaxWidth(150);
 
         HBox summaMokkiBox = new HBox(5);
-        summaMokkiBox.getChildren().addAll(mokkiField, priceField);
+        summaMokkiBox.getChildren().addAll(mokkifField, priceField);
 
         Label tuloLabel = new Label();
         tuloLabel.setText("Tulopäivä:");
@@ -100,10 +99,10 @@ public class Taustaohjelma extends Application {
         Label lahtoLabel = new Label();
         lahtoLabel.setText("Lähtöpäivä:");
 
-        DatePicker tuloPicker = new DatePicker();
+        tuloPicker = new DatePicker();
         tuloPicker.setValue(LocalDate.now());
 
-        DatePicker lahtoPicker = new DatePicker();
+        lahtoPicker = new DatePicker();
         lahtoPicker.setValue(LocalDate.now());
 
         HBox tuloBox = new HBox(5);
@@ -142,7 +141,7 @@ public class Taustaohjelma extends Application {
         VBox vBox = new VBox(5);
         vBox.getChildren().addAll(allInfoBox, buttonbox, table);
 
-        Scene scene = new Scene(vBox, 500, 600);
+        Scene scene = new Scene(vBox, 600, 500);
 
         loadVarausFromDatabase();
         return scene;
@@ -150,7 +149,7 @@ public class Taustaohjelma extends Application {
 
     public void luoPdf() {
         try {
-            String tiedostoPolku = "varaukset.pdf";
+            String tiedostoPolku = "varaus_mokkibuddy.pdf";
 
             PdfWriter writer = new PdfWriter(new FileOutputStream(tiedostoPolku));
             PdfDocument pdf = new PdfDocument(writer);
@@ -189,54 +188,55 @@ public class Taustaohjelma extends Application {
     }
 
     public void etsiVaraus() {
-        String nimiSearch = nameField.getText().toLowerCase();
-        String sahkopostiSearch = emailField.getText().toLowerCase();
-        String mokkiSearch = mokkiField.getText().toLowerCase();
-        String summaSearch = summaField.getText();
-        String saapumispvmSearch = saapumispvmField.getValue().toString();
-        String lahtopvmSearch = lahtopvmField.getValue().toString();
+        String nimiSearch = nimiField.getText() != null ? nimiField.getText().toLowerCase() : "";
+        String sahkopostiSearch = spostiField.getText() != null ? spostiField.getText().toLowerCase() : "";
+        String mokkiSearch = mokkifField.getText() != null ? mokkifField.getText().toLowerCase() : "";
+        String summaSearch = priceField.getText() != null ? priceField.getText() : "";
 
-        // Suodatetaan alkuperäinen lista (data)
+        String saapumispvmSearch = tuloPicker.getValue() != null ? tuloPicker.getValue().toString() : "";
+        String lahtopvmSearch = lahtoPicker.getValue() != null ? lahtoPicker.getValue().toString() : "";
+
         ObservableList<Tausta> filteredData = FXCollections.observableArrayList();
 
         for (Tausta tausta : data) {
             boolean matches = true;
 
-            // Suodata nimellä
             if (!nimiSearch.isEmpty() && !tausta.getNimi().toLowerCase().contains(nimiSearch)) {
                 matches = false;
             }
 
-            // Suodata sähköpostilla
             if (!sahkopostiSearch.isEmpty() && !tausta.getSahkoposti().toLowerCase().contains(sahkopostiSearch)) {
                 matches = false;
             }
 
-            // Suodata mökin ID:llä
             if (!mokkiSearch.isEmpty() && !String.valueOf(tausta.getMokkiId()).contains(mokkiSearch)) {
                 matches = false;
             }
 
-            // Suodata summalla
-            if (!summaSearch.isEmpty() && tausta.getSumma() != Double.parseDouble(summaSearch)) {
+            if (!summaSearch.isEmpty()) {
+                try {
+                    double summaVal = Double.parseDouble(summaSearch);
+                    if (tausta.getSumma() != summaVal) {
+                        matches = false;
+                    }
+                } catch (NumberFormatException e) {
+                    matches = false;
+                }
+            }
+
+            if (!saapumispvmSearch.isEmpty() && (tausta.getSaapumispvm() == null || !tausta.getSaapumispvm().toString().contains(saapumispvmSearch))) {
                 matches = false;
             }
 
-            // Suodata saapumispäivämäärällä
-            if (!saapumispvmSearch.isEmpty() && !tausta.getSaapumispvm().toString().contains(saapumispvmSearch)) {
+            if (!lahtopvmSearch.isEmpty() && (tausta.getLahtopvm() == null || !tausta.getLahtopvm().toString().contains(lahtopvmSearch))) {
                 matches = false;
             }
 
-            // Suodata lähtöpvm:llä
-            if (!lahtopvmSearch.isEmpty() && !tausta.getLahtopvm().toString().contains(lahtopvmSearch)) {
-                matches = false;
-            }
-
-            // Jos kaikki hakuehdot täyttyvät, lisätään varaus tuloksiin
             if (matches) {
                 filteredData.add(tausta);
             }
         }
+
         table.setItems(filteredData);
     }
 
@@ -253,8 +253,8 @@ public class Taustaohjelma extends Application {
                 String nimi = resultSet.getString("nimi");
                 String sahkoposti = resultSet.getString("sahkoposti");
                 LocalDate saapumispvm = resultSet.getDate("saapumispvm").toLocalDate();
-                LocalDate lahtopvm = resultSet.getDate("lahtopvm").toLocalDate();
-                int mokkiId = resultSet.getInt("mokki_id");
+                LocalDate lahtopvm = resultSet.getDate("lahtopaivamaara").toLocalDate();
+                String mokkiId = resultSet.getString("mokki");
                 double summa = resultSet.getDouble("summa");
 
                 // Lisätään uusi varaus tietokannasta

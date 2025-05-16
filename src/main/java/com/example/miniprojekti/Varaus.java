@@ -24,7 +24,7 @@ public class Varaus {
 
     // Konstruktori, jossa käytetään LocalDate-muotoisia päivämääriä
     public Varaus(int id, String nimi, String sahkoposti, String puhelin, int henkiloLkm, String mokki, boolean lisaSanky, boolean siivous, boolean myohainenUloskirjautuminen, double summa, String korttiNumero, String voimassaoloaika, String turvakoodi, LocalDate saapumispvm, LocalDate lahtopvm) {
-        this.id = new SimpleIntegerProperty(0);
+        this.id = new SimpleIntegerProperty(id);
         this.nimi = new SimpleStringProperty(nimi);
         this.sahkoposti = new SimpleStringProperty(sahkoposti);
         this.puhelin = new SimpleStringProperty(puhelin);
@@ -42,10 +42,10 @@ public class Varaus {
     }
 
     public Varaus(String nimi, String sahkoposti, String puhelin, int henkiloLkm, String mokki,
-                  boolean lisaSanky, boolean siivous, boolean myohainenUloskirjautuminen, boolean cleaning,
+                  boolean lisaSanky, boolean siivous, boolean myohainenUloskirjautuminen,
                   double summa, String korttiNumero, String voimassaoloaika, String turvakoodi,
                   LocalDate saapumispvm, LocalDate lahtopvm) {
-        this.id = new SimpleIntegerProperty(0);
+        this.id = new SimpleIntegerProperty();
         this.nimi = new SimpleStringProperty(nimi);
         this.sahkoposti = new SimpleStringProperty(sahkoposti);
         this.puhelin = new SimpleStringProperty(puhelin);
@@ -58,8 +58,8 @@ public class Varaus {
         this.korttiNumero = new SimpleStringProperty(korttiNumero);
         this.voimassaoloaika = new SimpleStringProperty(voimassaoloaika);
         this.turvakoodi = new SimpleStringProperty(turvakoodi);
-        this.saapumispvm = new SimpleObjectProperty<>(LocalDate.parse(saapumispvm.toString()));
-        this.lahtopvm = new SimpleObjectProperty<>(LocalDate.parse(lahtopvm.toString()));
+        this.saapumispvm = new SimpleObjectProperty<>(saapumispvm);
+        this.lahtopvm = new SimpleObjectProperty<>(lahtopvm);
     }
 
     public int getId() { return id.get(); }
